@@ -3,7 +3,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { styles } from '../style/estilos';
 import { useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 export default function Menu({ mostrarMenu }) {
 

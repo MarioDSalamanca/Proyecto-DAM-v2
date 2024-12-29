@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
       marginTop: 120,
     },
     h1Login: {
-      color: "red",
+      color: "#f8ad2a",
       fontSize: 45,
       marginBottom: 60,
       fontWeight: "700",
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
       height: 'auto',
       backgroundColor: "white",
       borderWidth: 1,
-      borderColor: "red",
+      borderColor: "#f8ad2a",
       borderRadius: 5,
       paddingVertical: 5,
       paddingHorizontal: 20,
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     h2Login: {
       fontSize: 20,
       fontStyle: "italic",
-      color: "red",
+      color: "#f8ad2a",
       fontWeight: "500",
       marginTop: 20,
     },
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
       fontStyle: "italic",
     },
     botonIniciarSesion: {
-      backgroundColor: "red",
+      backgroundColor: "#f8ad2a",
       marginTop: 40,
       padding: 5,
       textAlign: "center",
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
       textAlign: "center",
       borderRadius: 3,
       borderWidth: 1,
-      borderColor: "red",
+      borderColor: "#f8ad2a",
       marginBottom: 20,
     },
     textoRegistrarse: {
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
       fontSize: 15,
       fontWeight: "500",
       fontStyle: "italic",
-      color: "red",
+      color: "#f8ad2a",
     },
 
   // Menú
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     homeLayouts: {
       width: "45%",
       height: "20%",
-      backgroundColor: "red",
+      backgroundColor: "#f8ad2a",
       padding: 15,
       marginVertical: 15,
       borderWidth: 1.5,
