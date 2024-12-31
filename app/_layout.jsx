@@ -11,6 +11,11 @@ export default function Layout() {
 
   const [menu, setMenu] = useState(false);
 
+  // Modificar el estado de la animación
+  const [isPressed, setIsPressed] = useState(false);
+  const handlePressIn = () => setIsPressed(true);
+  const handlePressOut = () => setIsPressed(false);
+
   // Función para mostrar u ocultar el menú
   function mostrarMenu() {
     setMenu(!menu);
@@ -42,12 +47,18 @@ export default function Layout() {
               </Pressable>
             ),
             headerLeft: () => (
-              <Pressable onPress={mostrarMenu}>
+              <Pressable onPress={mostrarMenu}
+                onPressIn={ handlePressIn }
+                onPressOut={ handlePressOut }
+                style={({ pressed }) => [{ backgroundColor: pressed ? 'grey' : null }]}>
                 <MaterialCommunityIcons name="menu" size={30} color="#f8ad2a" />
               </Pressable>
             ),
             headerRight: () => (
-              <Pressable onPress={logout}>
+              <Pressable onPress={logout}
+                onPressIn={ handlePressIn }
+                onPressOut={ handlePressOut }
+                style={({ pressed }) => [{ backgroundColor: pressed ? 'grey' : null }]}>
                 <MaterialCommunityIcons name="logout" size={30} color="#f8ad2a" />
               </Pressable>
             ),

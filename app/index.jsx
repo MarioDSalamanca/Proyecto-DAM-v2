@@ -10,8 +10,55 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { useAuth } from "./consultas/useAuth";
 import { router } from "expo-router";
-import consultas from "./consultas/db";
 
+import * as SQLite from 'expo-sqlite';
+
+// Comprobar si ya se ha iniciado sesión
+const comprobarAuth = async () => {
+  const token = await AsyncStorage.getItem("authToken");
+  if (token) {
+    // Redirige si hay token
+    router.replace("/home");
+  }
+  setLoading(false);
+};
+
+// Inicializar la db
+const inicializarDB = async () => {
+
+  const db = await SQLite.openDatabaseAsync('VitalPower');
+
+  db ? console.log("instancia a la db: ", db) : console.log("MAL")
+
+  try {
+    await db.execAsync(`PRAGMA journal_mode = WAL;`);
+    await db.execAsync('PRAGMA foreign_keys = ON;');
+
+    // Crear tabla usuarios si no existe
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        clave TEXT NOT NULL,
+        edad INTEGER,
+        peso REAL,
+        altura REAL,
+        genero TEXT
+      );
+    `);
+  } catch(err) {
+    console.log("Error: ", err)
+  }
+
+  console.log("Continuamos")
+
+  // Verificar si la bbdd ya tiene datos
+  let result = await db.getFirstAsync(`SELECT COUNT(*) as count FROM usuarios;`);
+
+  console.log("Resultados: ", result)
+  
+  console.log("DB inicializada: ", db)
+}
 
 // Funciones y constantes para el efecto visual del login
 const InicioSesion = ({ vuelta, validar, setUsuario, setClave, usuario, clave }) => {
@@ -126,32 +173,11 @@ const FlipCard = ({
 
 export default function Index() {
 
-  const [loading, setLoading] = useState(true);
-
-  // Comprobar si ya se ha iniciado sesión
+  // Comprobar si ya se ha iniciado sesión e inicializar db
   useEffect(() => {
-    const comprobarAuth = async () => {
-      const token = await AsyncStorage.getItem("authToken");
-      if (token) {
-        // Redirige si hay token
-        router.replace("/home");
-      }
-      setLoading(false);
-    };
-
     comprobarAuth();
+    inicializarDB();
   }, [])
-
-  if (loading) {
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#303030" }}>
-      <ActivityIndicator size="large" color="#f8ad2a" />
-    </View>
-  }
-
-  // Inicializar la bbdd 
-  useEffect(() => {
-    consultas.create();
-  }, []);
 
   // Hooks para manejar los datos de los formularios
   const [usuario, setUsuario] = useState('');

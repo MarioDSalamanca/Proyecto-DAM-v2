@@ -34,45 +34,47 @@ const consultas = {
     });
   },
 
-  select: (filtros = {}) => {
+  select: (usuario) => {
     return new Promise((resolve, reject) => {
-      let query = `SELECT * FROM usuarios`;
-      const params = [];
+      
+      let query = `select * from usuarios
+            where nombre like '${usuario.nombre}'
+            and clave like '${usuario.clave}'`;
+      
+      console.log(query);
 
-      if (filtros.nombre) {
-        query += ` WHERE nombre = ?`;
-        params.push(filtros.nombre);
-        params.push(filtros.clave);
-      }
-
-      db.withTransactionAsync(async (tx) => {
-        tx.runAsync(
-          query,
-          params,
-          (_, { rows }) => resolve(rows._array),
-          (_, error) => reject(error)
-        );
+      db.withTransactionAsync(async () => {
+        
+        try {
+          let result = await db.getFirstAsync(query);
+          resolve(result.rows._array);
+        } catch (error) {
+          reject(error);
+        }
       });
     });
   },
+
 
   insert: (usuario) => {
     return new Promise((resolve, reject) => {
-      const { nombre, clave } = usuario;
 
-      console.log("ey");
-      db.withTransactionAsync(async (tx) => {
-        tx.runAsync(
-          `
-          INSERT INTO usuarios (nombre, clave) VALUES (?, ?);
-          `,
-          [nombre, clave],
-          (_, result) => resolve(result),
-          (_, error) => reject(error)
-        );
+      db.withTransactionAsync(async () => {
+
+        console.log("oy");
+        try {
+          let result = await db.runAsync(
+            `insert into usuarios values 
+            ('${usuario.nombre}', '${usuario.clave}')`
+          );
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
       });
     });
   },
+
 
 };
 
