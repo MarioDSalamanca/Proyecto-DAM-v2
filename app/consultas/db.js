@@ -1,15 +1,15 @@
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabaseAsync('VitalPower');
-
 const consultas = {
-  create: async () => {
-    db.withTransactionAsync(async (tx) => {
-      tx.runAsync('PRAGMA journal_mode = WAL;');
-      tx.runAsync('PRAGMA foreign_keys = ON;');
+  inicializarDB: async () => {
+    const db = await SQLite.openDatabaseAsync('VitalPower');
 
+    try {
+      await db.execAsync(`PRAGMA journal_mode = WAL;`);
+      await db.execAsync('PRAGMA foreign_keys = ON;');
+  
       // Crear tabla usuarios si no existe
-      tx.runAsync(`
+      await db.execAsync(`
         CREATE TABLE IF NOT EXISTS usuarios (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           nombre TEXT NOT NULL,
@@ -20,39 +20,33 @@ const consultas = {
           genero TEXT
         );
       `);
-
-      // Verificar si la bbdd ya tiene datos
-      tx.runAsync(`
-        SELECT COUNT(*) as count FROM usuarios;
-      `, [], (_, result) => {
-        const count = result.rows._array[0].count;
-
-        if (count === 0) {
-          console.log('No hay usuarios en la base de datos.');
-        }
-      });
-    });
+    } catch(err) {
+      console.log("Error: ", err)
+    }
   },
+  login: async (usuario) => {
+    
+    const db = await SQLite.openDatabaseAsync('VitalPower');
 
-  select: (usuario) => {
-    return new Promise((resolve, reject) => {
-      
-      let query = `select * from usuarios
-            where nombre like '${usuario.nombre}'
-            and clave like '${usuario.clave}'`;
-      
-      console.log(query);
-
-      db.withTransactionAsync(async () => {
-        
-        try {
-          let result = await db.getFirstAsync(query);
-          resolve(result.rows._array);
-        } catch (error) {
-          reject(error);
+    let result = await db.getFirstAsync(`SELECT nombre, clave FROM usuario WHERE nombre like '${usuario.nombre}' and clave like '${usuario.clave}';`);
+    
+    return new Promise((resolve, reject => {
+      let result = await db.getFirstAsync(`SELECT nombre, clave FROM usuario WHERE nombre = ? AND clave = ?`,
+      [usuario.nombre, usuario.clave],
+      (result) => {
+        const rows = result.rows;
+        if (rows.length > 0) {
+          resolve(rows._array[0]); // Devuelve el primer usuario encontrado
+        } else {
+          resolve(null); // No se encontró ningún usuario
         }
-      });
+      },
+      (error) => {
+        reject('Error en la consulta SQL: ' + error.message);
+      }
+    );
     });
+
   },
 
 

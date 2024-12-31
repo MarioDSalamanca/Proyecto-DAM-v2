@@ -1,59 +1,43 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import * as SQLite from 'expo-sqlite';
-
-const db = SQLite.openDatabaseAsync('VitalPower');
+import consultas from './db';
 
 export const useAuth = {
-  
   login: async (usuario, clave) => {
     return new Promise((exito, error) => {
-      let query = `select * from usuarios
-            where nombre like '${usuario}'
-            and clave like '${clave}'`;
-
-      console.log(query);
-
-      db.withTransactionAsync(async () => {
-        try {
-          let result = await db.getFirstAsync(query);
-          if (result.rows._array.length > 0 && result.rows._array[0].clave === clave) {
+      consultas.select({ nombre: usuario })
+        .then((result) => {
+          if (result.length > 0 && result[0].clave === clave) {
             AsyncStorage.setItem('usuario', usuario);
             const token = 'authToken';
             AsyncStorage.setItem('authToken', token)
               .then(() => exito(token))
-              .catch((err) => error('Error al guardar el token: ', err));
+              .catch((err) => error('Error al guardar el token'));
           } else {
             error('Usuario o contraseña incorrectos');
           }
-        } catch (err) {
+        })
+        .catch((err) => {
           error('Error al verificar el usuario');
-        }
-      });
+        });
     });
   },
 
   registro: async (usuario, clave, clave2) => {
     return new Promise((exito, error) => {
       if (clave === clave2) {
-        console.log(db);
-        db.withTransactionAsync(async () => {
-          try {
-            let result = await db.runAsync(
-              `insert into usuarios (nombre, clave) values 
-              ('${usuario}', '${clave}')`
-            );
+        // Insertar el nuevo usuario en la base de datos
+        consultas.insert({ nombre: usuario, clave: clave, })
+          .then(() => {
             exito('Te has registrado correctamente');
-          } catch (err) {
-            error('No te has podido registrar: ', err);
-          }
-        });
+          })
+          .catch(() => {
+            error('No te has podido registrar');
+          });
       } else {
         error('Las contraseñas no coinciden');
       }
     });
-  }
-  
-};
+  },
+}
 
 export default useAuth;

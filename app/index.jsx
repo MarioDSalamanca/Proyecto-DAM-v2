@@ -10,8 +10,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { useAuth } from "./consultas/useAuth";
 import { router } from "expo-router";
-
 import * as SQLite from 'expo-sqlite';
+import consultas from "./consultas/db";
 
 // Comprobar si ya se ha iniciado sesión
 const comprobarAuth = async () => {
@@ -20,45 +20,7 @@ const comprobarAuth = async () => {
     // Redirige si hay token
     router.replace("/home");
   }
-  setLoading(false);
 };
-
-// Inicializar la db
-const inicializarDB = async () => {
-
-  const db = await SQLite.openDatabaseAsync('VitalPower');
-
-  db ? console.log("instancia a la db: ", db) : console.log("MAL")
-
-  try {
-    await db.execAsync(`PRAGMA journal_mode = WAL;`);
-    await db.execAsync('PRAGMA foreign_keys = ON;');
-
-    // Crear tabla usuarios si no existe
-    await db.execAsync(`
-      CREATE TABLE IF NOT EXISTS usuarios (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
-        clave TEXT NOT NULL,
-        edad INTEGER,
-        peso REAL,
-        altura REAL,
-        genero TEXT
-      );
-    `);
-  } catch(err) {
-    console.log("Error: ", err)
-  }
-
-  console.log("Continuamos")
-
-  // Verificar si la bbdd ya tiene datos
-  let result = await db.getFirstAsync(`SELECT COUNT(*) as count FROM usuarios;`);
-
-  console.log("Resultados: ", result)
-  
-  console.log("DB inicializada: ", db)
-}
 
 // Funciones y constantes para el efecto visual del login
 const InicioSesion = ({ vuelta, validar, setUsuario, setClave, usuario, clave }) => {
@@ -173,43 +135,52 @@ const FlipCard = ({
 
 export default function Index() {
 
-  // Comprobar si ya se ha iniciado sesión e inicializar db
-  useEffect(() => {
-    comprobarAuth();
-    inicializarDB();
-  }, [])
-
   // Hooks para manejar los datos de los formularios
   const [usuario, setUsuario] = useState('');
   const [clave, setClave] = useState('');
   const [clave2, setClave2] = useState('');
 
+  const [loading, setLoading] = useState(true);
+
   // Como definir una variable pero de React Native Animated
   const isFlipped = useSharedValue(false);
+
+    // Comprobar si ya se ha iniciado sesión e inicializar db
+    useEffect(() => {
+      comprobarAuth();
+      consultas.inicializarDB();
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }, [])
 
   // Función para la animación del login
   function vuelta() {
     isFlipped.value = !isFlipped.value;
   };
 
-  function validar(evento) {
-    if (evento == 'inicioSesion') {
+  async function validar(evento) {
+    if (evento === 'inicioSesion') {
       if (usuario?.trim().length > 3 && clave?.trim().length > 6) {
-        useAuth.login(usuario, clave)
-        .then(() => {
-          router.replace('/home');
-        })
-        .catch(err => {
-          alert(err);
-        });
+        try {
+          const result = await consultas.login({ nombre: usuario, clave: clave });
+          if (result) {
+            await AsyncStorage.setItem('usuario', usuario);
+            await AsyncStorage.setItem('authToken', 'authToken');
+          } else {
+            throw new Error('Usuario o contraseña incorrectos');
+          }
+        } catch (err) {
+          console.error(err.message || err);
+          throw err;
+        }
       } else {
-        alert("Algo va mal");
-        return;
+        throw new Error('Datos insuficientes para iniciar sesión');
       }
     }
     if (evento == 'registro') {
       if (usuario?.trim().length > 3 && clave?.trim().length > 6 && clave == clave2) {
-        useAuth.registro(usuario, clave, clave2)
+        consultas.registro(usuario, clave)
         .then(() => {
           alert('Registro exitoso');
           vuelta();
@@ -222,12 +193,15 @@ export default function Index() {
         return;
       }
     }
+  }
 
-    /**
-     * 
-     * FALTA PASAR VARIABLES A USEAUTH PARA QUE HAGA LA CONSULTA A LA BBDD DE USUARIO Y CLAVE Y CREAr ITEM DE AUTHTOKEN
-     * 
-     */
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#303030" }}>
+        <ActivityIndicator size="60" color="#f8ad2a" />
+        <Text style={{ color: "white", marginTop: 20 }}>Cargando...</Text>
+      </View>
+    );
   }
 
   return (
