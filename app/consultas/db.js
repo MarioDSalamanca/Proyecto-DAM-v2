@@ -7,12 +7,14 @@ const consultas = {
     try {
       await db.execAsync(`PRAGMA journal_mode = WAL;`);
       await db.execAsync('PRAGMA foreign_keys = ON;');
-  
+      
+      await db.execAsync(`DROP TABLE IF EXISTS usuarios`);
+
       // Crear tabla usuarios si no existe
       await db.execAsync(`
         CREATE TABLE IF NOT EXISTS usuarios (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT NOT NULL,
+          id INTEGER PRIMARY KEY,
+          usuario TEXT NOT NULL,
           clave TEXT NOT NULL,
           edad INTEGER,
           peso REAL,
@@ -20,21 +22,39 @@ const consultas = {
           genero TEXT
         );
       `);
+
+      await db.runAsync(`INSERT INTO usuarios (usuario, clave) VALUES ('Mario', 'Mario.rlv')`)
     } catch(err) {
       console.log("Error: ", err)
     }
   },
-  login: async (usuario) => {
+  login: async ({usuario}) => {
     
     const db = await SQLite.openDatabaseAsync('VitalPower');
 
-    let result = await db.getFirstAsync(`SELECT nombre, clave FROM usuario WHERE nombre like '${usuario.nombre}' and clave like '${usuario.clave}';`);
-    
-    return new Promise((resolve, reject => {
-      let result = await db.getFirstAsync(`SELECT nombre, clave FROM usuario WHERE nombre = ? AND clave = ?`,
+    console.log(usuario)
+
+    try {
+
+      const resultado = await db.getFirstAsync('SELECT * FROM usuarios');
+
+      /* const query = await db.prepareAsync(`SELECT nombre, clave FROM usuarios WHERE nombre = ? and clave = ?`);
+      let execQuery = await query.executeAsync([usuario.usuario, usuario.clave])
+      resultado = await execQuery.getFirstAsync() */
+  
+      console.log(resultado)
+
+    } catch (err) {
+      console.log('Error: ', err)
+    } finally {
+      await execQuery.resetAsync();
+    }
+
+    /* return new Promise( async (resolve, reject) => {
+      const query = await db.getFirstAsync(`SELECT nombre, clave FROM usuario WHERE nombre = ? AND clave = ?`,
       [usuario.nombre, usuario.clave],
-      (result) => {
-        const rows = result.rows;
+      (query) => {
+        const rows = query.rows;
         if (rows.length > 0) {
           resolve(rows._array[0]); // Devuelve el primer usuario encontrado
         } else {
@@ -45,7 +65,7 @@ const consultas = {
         reject('Error en la consulta SQL: ' + error.message);
       }
     );
-    });
+    }); */
 
   },
 
@@ -57,11 +77,11 @@ const consultas = {
 
         console.log("oy");
         try {
-          let result = await db.runAsync(
+          const query = await db.runAsync(
             `insert into usuarios values 
             ('${usuario.nombre}', '${usuario.clave}')`
           );
-          resolve(result);
+          resolve(query);
         } catch (error) {
           reject(error);
         }

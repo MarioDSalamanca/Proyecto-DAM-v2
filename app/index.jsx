@@ -16,7 +16,7 @@ import consultas from "./consultas/db";
 // Comprobar si ya se ha iniciado sesión
 const comprobarAuth = async () => {
   const token = await AsyncStorage.getItem("authToken");
-  if (token) {
+  if (token == true) {
     // Redirige si hay token
     router.replace("/home");
   }
@@ -162,20 +162,14 @@ export default function Index() {
   async function validar(evento) {
     if (evento === 'inicioSesion') {
       if (usuario?.trim().length > 3 && clave?.trim().length > 6) {
-        try {
-          const result = await consultas.login({ nombre: usuario, clave: clave });
-          if (result) {
-            await AsyncStorage.setItem('usuario', usuario);
-            await AsyncStorage.setItem('authToken', 'authToken');
-          } else {
-            throw new Error('Usuario o contraseña incorrectos');
+          const respuesta = await consultas.login({ usuario: usuario, clave: clave });
+          if (respuesta) {
+            await AsyncStorage.setItem('usuario', respuesta.usuario);
+            await AsyncStorage.setItem('authToken', true);
           }
-        } catch (err) {
-          console.error(err.message || err);
-          throw err;
-        }
+        
       } else {
-        throw new Error('Datos insuficientes para iniciar sesión');
+        alert('Datos insuficientes para iniciar sesión');
       }
     }
     if (evento == 'registro') {
