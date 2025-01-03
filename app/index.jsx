@@ -162,11 +162,17 @@ export default function Index() {
   async function validar(evento) {
     if (evento === 'inicioSesion') {
       if (usuario?.trim().length > 3 && clave?.trim().length > 6) {
-          const respuesta = await consultas.login({ usuario: usuario, clave: clave });
-          if (respuesta) {
-            await AsyncStorage.setItem('usuario', respuesta.usuario);
-            await AsyncStorage.setItem('authToken', true);
-          }
+        const usuarioObj = { usuario: usuario, clave: clave };
+        
+        console.log("respuesta en index: ")
+        const respuesta = await consultas.login(usuarioObj);
+
+        console.log("respuesta en index: ",respuesta)
+        if (respuesta != null) {
+          await AsyncStorage.setItem('usuario', respuesta.usuario);
+          await AsyncStorage.setItem('authToken', true);
+          router.replace('/home')
+        }
         
       } else {
         alert('Datos insuficientes para iniciar sesión');

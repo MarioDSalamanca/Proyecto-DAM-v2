@@ -28,26 +28,33 @@ const consultas = {
       console.log("Error: ", err)
     }
   },
-  login: async ({usuario}) => {
+  login: async ( usuarioObj ) => {
+
+    const { usuario, clave } = usuarioObj;
     
     const db = await SQLite.openDatabaseAsync('VitalPower');
 
-    console.log(usuario)
-
     try {
 
-      const resultado = await db.getFirstAsync('SELECT * FROM usuarios');
+      /* const queryString = `SELECT usuario, clave FROM usuarios WHERE usuario = '${usuario}' and clave = '${clave}'`;
+      console.log('Consulta SQL:', queryString); */
 
-      /* const query = await db.prepareAsync(`SELECT nombre, clave FROM usuarios WHERE nombre = ? and clave = ?`);
-      let execQuery = await query.executeAsync([usuario.usuario, usuario.clave])
-      resultado = await execQuery.getFirstAsync() */
-  
-      console.log(resultado)
+      const query = await db.prepareAsync(`SELECT usuario, clave FROM usuarios WHERE usuario = ? and clave = ?`);
+      const execQuery = await query.executeAsync([usuario, clave]);
+      const resultado = await execQuery.getFirstAsync();
+
+      console.log("resultado: ",resultado)
+
+      return resultado;
 
     } catch (err) {
+
       console.log('Error: ', err)
+
     } finally {
+
       await execQuery.resetAsync();
+
     }
 
     /* return new Promise( async (resolve, reject) => {
