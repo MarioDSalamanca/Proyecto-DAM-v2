@@ -20,14 +20,13 @@ const consultas = {
           genero TEXT
         );
       `);
-
-      await db.runAsync(`INSERT INTO usuarios (usuario, clave) VALUES ('Mario', 'Mario.rlv')`)
+      
     } catch(err) {
       console.log("Error: ", err)
     }
   },
   login: async ( usuarioObj ) => {
-
+    
     const { usuario, clave } = usuarioObj;
     
     const db = await SQLite.openDatabaseAsync('VitalPower');
@@ -48,8 +47,6 @@ const consultas = {
 
 
   registro: async ( usuarioObj ) => {
-
-    console.log("registrando...")
 
     const { usuario, clave } = usuarioObj;
     

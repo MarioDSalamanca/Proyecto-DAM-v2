@@ -9,7 +9,7 @@ import Animated, {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
-import consultas from "./consultas/db";
+import consultas from "./consultas/login";
 
 // Funciones y constantes para el efecto visual del login
 const InicioSesion = ({ vuelta, validar, setUsuario, setClave, usuario, clave }) => {
@@ -19,7 +19,9 @@ const InicioSesion = ({ vuelta, validar, setUsuario, setClave, usuario, clave })
       <TextInput style={styles.inputsLogin} value={usuario} onChangeText={setUsuario} />
       <Text style={styles.h2Login}>Contraseña:</Text>
       <TextInput style={styles.inputsLogin} secureTextEntry value={clave} onChangeText={setClave} />
-      <Pressable style={styles.botonIniciarSesion} onPress={() => validar("inicioSesion")}>
+      <Pressable
+       onPress={() => validar("inicioSesion")}
+       style={({ pressed }) => [{ backgroundColor: pressed ? 'orange' : null }, styles.botonIniciarSesion]} >
         <Text style={styles.textoIniciarSesion}>Iniciar Sesión</Text>
       </Pressable>
       <Text style={{ textAlign: "center", marginVertical: 10, color: "#f8ad2a" }}>o</Text>
@@ -41,8 +43,10 @@ const Registrate = ({ vuelta, validar, setUsuario, setClave, setClave2,  usuario
       <TextInput style={styles.inputsLogin} secureTextEntry value={clave} onChangeText={setClave} />
       <Text style={styles.h2Login}>Confirmar contraseña:</Text>
       <TextInput style={styles.inputsLogin} secureTextEntry value={clave2} onChangeText={setClave2} />
-      <Pressable style={styles.botonIniciarSesion}>
-        <Text style={styles.textoIniciarSesion} onPress={() => validar("registro")}>Registrate</Text>
+      <Pressable
+        onPress={() => validar("registro")}
+        style={({ pressed }) => [{ backgroundColor: pressed ? 'orange' : null }, styles.botonIniciarSesion]} >
+        <Text style={styles.textoIniciarSesion}>Registrate</Text>
       </Pressable>
       <Text style={{ textAlign: "center", marginVertical: 10, color: "#f8ad2a" }}>o</Text>
       <View style={{ alignItems: "center" }}>
@@ -150,19 +154,16 @@ export default function Index() {
   function vuelta() { isFlipped.value = !isFlipped.value; };
 
   async function validar(evento) {
-
     if (evento === 'inicioSesion') {
-
       if (usuario.length > 3 && clave.trim().length > 6) {
 
         const usuarioObj = { usuario: usuario, clave: clave };
-        
         const respuesta = await consultas.login(usuarioObj);
 
         if (respuesta) {
 
           await AsyncStorage.setItem('usuario', respuesta);
-          await AsyncStorage.setItem('authToken', '1');
+          await AsyncStorage.setItem('authToken', 'true');
           router.replace('/home');
 
         } else {
@@ -178,11 +179,9 @@ export default function Index() {
       }
     }
     if (evento == 'registro') {
-
       if (usuario.trim().length > 3 && clave.trim().length >= 6 && clave == clave2) {
         
         const usuarioObj = { usuario: usuario, clave: clave };
-        
         const respuesta = await consultas.registro(usuarioObj);
 
         if (respuesta) {
@@ -213,7 +212,7 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-    <View style={styles.viewLogin}>
+    <View style={styles.loginLayout}>
       <Text style={styles.h1Login}>VitalPower</Text>
       <FlipCard
         isFlipped={isFlipped}

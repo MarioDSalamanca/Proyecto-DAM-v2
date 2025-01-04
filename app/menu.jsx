@@ -17,27 +17,21 @@ export default function Menu({ mostrarMenu }) {
 
   // Rescatar el usuario
   useEffect(() => {
-    const getUsuario = async () => {
-      const usuario = await AsyncStorage.getItem("usuario");
-      usuario ? setUsuario(usuario) : setUsuario('nose');
-    }
-
-    getUsuario();
+    const usuario = AsyncStorage.getItem("usuario");
+    setUsuario(usuario);
   }, []);
 
   return (
     <View style={ styles.menu }>
       <View style={ styles.cabeceraMenu }>
-        <Pressable onPress={() => { mostrarMenu(); router.replace('/(usuario)/usuario'); }} style={ styles.cabeceraIcono }>
-          <MaterialCommunityIcons name="account" size={30} color="black" />
-        </Pressable>
+        <MaterialCommunityIcons name="account" size={30} color="black" style={styles.cabeceraIcono} />
         <Text style={styles.cabeceraUsuario}>{usuario}</Text>
         <Pressable onPress={mostrarMenu} style={ styles.cerrarMenu }>
           <MaterialCommunityIcons name="keyboard-backspace" size={30} color="white" />
         </Pressable>
       </View>
       <View style={ styles.linksMenu }>
-      <Pressable onPress={() => { mostrarMenu(); router.replace('/(usuario)/perfil'); }}
+      <Pressable onPress={() => { mostrarMenu(); router.replace('/datosUsuario/perfil'); }}
           onPressIn={ handlePressIn }
           onPressOut={ handlePressOut }
           style={({ pressed }) => [{ backgroundColor: pressed ? 'white' : 'black' }, styles.cajaLinksMenu]}>
@@ -45,7 +39,7 @@ export default function Menu({ mostrarMenu }) {
           <MaterialCommunityIcons name="account-edit" size={18} color={ isPressed ? 'black' : 'white' } />    Mi Perfil
           </Text>
         </Pressable>
-        <Pressable onPress={() => { mostrarMenu(); router.replace('/(usuario)/datos'); }}
+        <Pressable onPress={() => { mostrarMenu(); router.replace('/datosUsuario/datos'); }}
           onPressIn={ handlePressIn }
           onPressOut={ handlePressOut }
           style={({ pressed }) => [{ backgroundColor: pressed ? 'white' : 'black' }, styles.cajaLinksMenu]}>
@@ -53,7 +47,7 @@ export default function Menu({ mostrarMenu }) {
           <MaterialCommunityIcons name="google-analytics" size={18} color={ isPressed ? 'black' : 'white' } />    Datos
           </Text>
         </Pressable>
-        <Pressable onPress={() => { mostrarMenu(); router.replace('/(usuario)/entrenamientos'); }}
+        <Pressable onPress={() => { mostrarMenu(); router.replace('/datosUsuario/entrenamientos'); }}
           onPressIn={ handlePressIn } 
           onPressOut={ handlePressOut }
           style={({ pressed }) => [{ backgroundColor: pressed ? 'white' : 'black' }, styles.cajaLinksMenu]}>
@@ -61,7 +55,7 @@ export default function Menu({ mostrarMenu }) {
           <MaterialCommunityIcons name="arm-flex-outline" size={18} color={ isPressed ? 'black' : 'white' } />    Entrenamientos
           </Text>
         </Pressable>
-        <Pressable onPress={() => { mostrarMenu(); router.replace('/(usuario)/info'); }}
+        <Pressable onPress={() => { mostrarMenu(); router.replace('/datosUsuario/info'); }}
           onPressIn={ handlePressIn } 
           onPressOut={ handlePressOut }
           style={({ pressed }) => [{ backgroundColor: pressed ? 'white' : 'black' }, styles.cajaLinksMenu]}>

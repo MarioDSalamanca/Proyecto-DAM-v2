@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
 
   // Login
 
-    viewLogin: {
+    loginLayout: {
       alignItems: "center",
       marginTop: 120,
     },
@@ -89,9 +89,11 @@ const styles = StyleSheet.create({
   // Menú
 
     menu: {
-      position: "absolute",
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
       width: "80%",
-      height: "120%",
       backgroundColor: "black",
       zIndex: 10,
       paddingVertical: 60,
@@ -155,7 +157,17 @@ const styles = StyleSheet.create({
       textShadowColor: 'black',
       textShadowOffset: { width: 2, height: 2 },
       textShadowRadius: 1,      
-    }
+    },
+
+  // datosUsuario
+
+    perfilLayout: {
+      backgroundColor: "white",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-around",
+      padding: 10,      
+    },
 });
 
 export { styles };

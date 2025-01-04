@@ -1,11 +1,11 @@
 import { Pressable, Text, View } from "react-native";
 import { styles } from "../style/estilos";
 
-export default function Home({ menu }) {
+export default function Home() {
   return (
     <View style={styles.container} >
       <View style={styles.homeLayout}>
-      <Pressable style={styles.homeLayouts} onPress={() => alert("train")}>
+        <Pressable style={styles.homeLayouts} onPress={() => alert("train")}>
             <Text style={styles.textoHome}>
               Crea tus entrenamientos
             </Text>

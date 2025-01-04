@@ -41,7 +41,7 @@ export default function Layout() {
             headerTitleAlign: "center",
             headerTitle: () => (
               <Pressable onPress={() => router.replace('/')}>
-                <Text style={{ color: "#f8ad2a", fontSize: 20, fontWeight: "500", letterSpacing: 1 }}>
+                <Text style={{ color: "#f8ad2a", fontSize: 20, fontWeight: "500", letterSpacing: 1,}}>
                   VitalPower
                 </Text>
               </Pressable>
