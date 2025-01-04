@@ -51,7 +51,7 @@ export default function Layout() {
                 onPressIn={ handlePressIn }
                 onPressOut={ handlePressOut }
                 style={({ pressed }) => [{ backgroundColor: pressed ? 'grey' : null }]}>
-                <MaterialCommunityIcons name="menu" size={30} color="#f8ad2a" />
+                <MaterialCommunityIcons name="menu" size={35} color="#f8ad2a" />
               </Pressable>
             ),
             headerRight: () => (
@@ -59,7 +59,7 @@ export default function Layout() {
                 onPressIn={ handlePressIn }
                 onPressOut={ handlePressOut }
                 style={({ pressed }) => [{ backgroundColor: pressed ? 'grey' : null }]}>
-                <MaterialCommunityIcons name="logout" size={30} color="#f8ad2a" />
+                <MaterialCommunityIcons name="logout" size={35} color="#f8ad2a" />
               </Pressable>
             ),
           })}

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, Pressable, StyleSheet, ActivityIndicator, Modal } from "react-native";
 import { styles } from "../style/estilos";
 import Animated, {
   interpolate,
@@ -16,7 +16,7 @@ import consultas from "./consultas/db";
 // Comprobar si ya se ha iniciado sesión
 const comprobarAuth = async () => {
   const token = await AsyncStorage.getItem("authToken");
-  if (token == true) {
+  if (token) {
     // Redirige si hay token
     router.replace("/home");
   }
@@ -141,37 +141,42 @@ export default function Index() {
   const [clave2, setClave2] = useState('');
 
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(false);
 
   // Como definir una variable pero de React Native Animated
   const isFlipped = useSharedValue(false);
 
-    // Comprobar si ya se ha iniciado sesión e inicializar db
-    useEffect(() => {
-      comprobarAuth();
-      consultas.inicializarDB();
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-    }, [])
+  // Comprobar si ya se ha iniciado sesión e inicializar db
+  useEffect(() => {
+    comprobarAuth();
+    consultas.inicializarDB();
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, [])
+
+  function cambiarModal() { setModal(!modal) }
 
   // Función para la animación del login
-  function vuelta() {
-    isFlipped.value = !isFlipped.value;
-  };
+  function vuelta() { isFlipped.value = !isFlipped.value; };
 
   async function validar(evento) {
     if (evento === 'inicioSesion') {
       if (usuario?.trim().length > 3 && clave?.trim().length > 6) {
         const usuarioObj = { usuario: usuario, clave: clave };
         
-        console.log("respuesta en index: ")
         const respuesta = await consultas.login(usuarioObj);
 
         console.log("respuesta en index: ",respuesta)
+
         if (respuesta != null) {
-          await AsyncStorage.setItem('usuario', respuesta.usuario);
-          await AsyncStorage.setItem('authToken', true);
-          router.replace('/home')
+
+          await AsyncStorage.setItem('usuario', respuesta);
+          await AsyncStorage.setItem('authToken', '1');
+          router.replace('/home');
+
+        } else {
+          cambiarModal();
         }
         
       } else {
@@ -206,6 +211,16 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
+    <Modal animationType="slide" visible={modal} transparent>
+      <View style={{ flex: 1,/*  alignItems: "center", justifyContent: "center" */ }}>
+        <View style={styles.modal}>
+          <Text style={styles.textoModal}>
+            Algo mal
+          </Text>
+          <Pressable onPress={() => cambiarModal()} style={styles.botonModal}><Text>Okey</Text></Pressable>
+        </View>
+      </View>
+    </Modal>
     <View style={styles.viewLogin}>
       <Text style={styles.h1Login}>VitalPower</Text>
       <FlipCard

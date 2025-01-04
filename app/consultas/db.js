@@ -34,45 +34,17 @@ const consultas = {
     
     const db = await SQLite.openDatabaseAsync('VitalPower');
 
-    try {
+    /* const queryString = `SELECT usuario, clave FROM usuarios WHERE usuario = '${usuario}' and clave = '${clave}'`;
+    console.log('Consulta SQL:', queryString); */
 
-      /* const queryString = `SELECT usuario, clave FROM usuarios WHERE usuario = '${usuario}' and clave = '${clave}'`;
-      console.log('Consulta SQL:', queryString); */
+    const query = await db.prepareAsync(`SELECT usuario, clave FROM usuarios WHERE usuario = ? and clave = ?`);
+    const execQuery = await query.executeAsync([usuario, clave]);
+    const resultado = await execQuery.getFirstAsync();
+    await execQuery.resetAsync();
 
-      const query = await db.prepareAsync(`SELECT usuario, clave FROM usuarios WHERE usuario = ? and clave = ?`);
-      const execQuery = await query.executeAsync([usuario, clave]);
-      const resultado = await execQuery.getFirstAsync();
-
-      console.log("resultado: ",resultado)
-
-      return resultado;
-
-    } catch (err) {
-
-      console.log('Error: ', err)
-
-    } finally {
-
-      await execQuery.resetAsync();
-
-    }
-
-    /* return new Promise( async (resolve, reject) => {
-      const query = await db.getFirstAsync(`SELECT nombre, clave FROM usuario WHERE nombre = ? AND clave = ?`,
-      [usuario.nombre, usuario.clave],
-      (query) => {
-        const rows = query.rows;
-        if (rows.length > 0) {
-          resolve(rows._array[0]); // Devuelve el primer usuario encontrado
-        } else {
-          resolve(null); // No se encontró ningún usuario
-        }
-      },
-      (error) => {
-        reject('Error en la consulta SQL: ' + error.message);
-      }
-    );
-    }); */
+    let respuesta;
+    resultado ? respuesta = resultado.usuario : respuesta = null;
+    return respuesta;
 
   },
 
