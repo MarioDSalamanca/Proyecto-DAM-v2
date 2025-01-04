@@ -77,32 +77,13 @@ const styles = StyleSheet.create({
       fontStyle: "italic",
       color: "#f8ad2a",
     },
-
-  // Modal
-
-    modal: {
-      alignItems: "center",
-      justifyContent: "center",
-      height: 250,
-      width: 250,
-      backgroundColor: "black",
+    regularCard: {
+      position: 'absolute',
+      zIndex: 1,
     },
-    textoModal: {
-      textAlign: "center",
-      fontSize: 15,
-      fontWeight: "500",
-      fontStyle: "italic",
-      color: "#f8ad2a",
-    },
-    botonModal: {
-      width: 200,
-      backgroundColor: "white",
-      padding: 5,
-      textAlign: "center",
-      borderRadius: 3,
-      borderWidth: 1,
-      borderColor: "#f8ad2a",
-      marginBottom: 20,
+    flippedCard: {
+      backfaceVisibility: 'hidden',
+      zIndex: 2,
     },
 
   // Menú

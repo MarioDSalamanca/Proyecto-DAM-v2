@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable, StyleSheet, ActivityIndicator, Modal } from "react-native";
+import { View, Text, TextInput, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { styles } from "../style/estilos";
 import Animated, {
   interpolate,
@@ -8,19 +8,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import { useAuth } from "./consultas/useAuth";
 import { router } from "expo-router";
-import * as SQLite from 'expo-sqlite';
 import consultas from "./consultas/db";
-
-// Comprobar si ya se ha iniciado sesión
-const comprobarAuth = async () => {
-  const token = await AsyncStorage.getItem("authToken");
-  if (token) {
-    // Redirige si hay token
-    router.replace("/home");
-  }
-};
 
 // Funciones y constantes para el efecto visual del login
 const InicioSesion = ({ vuelta, validar, setUsuario, setClave, usuario, clave }) => {
@@ -65,17 +54,6 @@ const Registrate = ({ vuelta, validar, setUsuario, setClave, setClave2,  usuario
   );
 };
 
-const flipCardStyles = StyleSheet.create({
-  regularCard: {
-    position: 'absolute',
-    zIndex: 1,
-  },
-  flippedCard: {
-    backfaceVisibility: 'hidden',
-    zIndex: 2,
-  },
-});
-
 // Constante / Función que controla la animación (sacado de React Native Animated)
 const FlipCard = ({
   isFlipped,
@@ -117,14 +95,14 @@ const FlipCard = ({
     <View>
       <Animated.View
         style={[
-          flipCardStyles.regularCard,
+          styles.regularCard,
           inicioSesionAnimatedStyle,
         ]}>
         {InicioSesion}
       </Animated.View>
       <Animated.View
         style={[
-          flipCardStyles.flippedCard,
+          styles.flippedCard,
           RegistrateAnimatedStyle,
         ]}>
         {Registrate}
@@ -141,64 +119,88 @@ export default function Index() {
   const [clave2, setClave2] = useState('');
 
   const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(false);
 
   // Como definir una variable pero de React Native Animated
   const isFlipped = useSharedValue(false);
 
-  // Comprobar si ya se ha iniciado sesión e inicializar db
-  useEffect(() => {
-    comprobarAuth();
-    consultas.inicializarDB();
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, [])
+    // Comprobar si ya se ha iniciado sesión e inicializar db
+    useEffect(() => {
 
-  function cambiarModal() { setModal(!modal) }
+      consultas.inicializarDB();
+
+      const comprobarAuth = async () => {
+
+        const token = await AsyncStorage.getItem("authToken");
+      
+        if (token) {
+          // Redirige si hay token
+          router.replace("/home");
+        }
+      };
+
+      comprobarAuth();
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+
+    }, [])
 
   // Función para la animación del login
   function vuelta() { isFlipped.value = !isFlipped.value; };
 
   async function validar(evento) {
+
     if (evento === 'inicioSesion') {
-      if (usuario?.trim().length > 3 && clave?.trim().length > 6) {
+
+      if (usuario.length > 3 && clave.trim().length > 6) {
+
         const usuarioObj = { usuario: usuario, clave: clave };
         
         const respuesta = await consultas.login(usuarioObj);
 
-        console.log("respuesta en index: ",respuesta)
-
-        if (respuesta != null) {
+        if (respuesta) {
 
           await AsyncStorage.setItem('usuario', respuesta);
           await AsyncStorage.setItem('authToken', '1');
           router.replace('/home');
 
         } else {
-          cambiarModal();
+
+          alert("Usuario o contraseña incorrecto");
+
         }
         
       } else {
+
         alert('Datos insuficientes para iniciar sesión');
+
       }
     }
     if (evento == 'registro') {
-      if (usuario?.trim().length > 3 && clave?.trim().length > 6 && clave == clave2) {
-        consultas.registro(usuario, clave)
-        .then(() => {
-          alert('Registro exitoso');
-          vuelta();
-        })
-        .catch(err => {
-          alert(err);
-        });
+
+      if (usuario.trim().length > 3 && clave.trim().length >= 6 && clave == clave2) {
+        
+        const usuarioObj = { usuario: usuario, clave: clave };
+        
+        const respuesta = await consultas.registro(usuarioObj);
+
+        if (respuesta) {
+
+          alert("Usuario registrado con éxito");
+          vuelta(); 
+
+        } else {
+
+          alert("No se ha podido realizar el registro, intentalo más tarde");
+
+        }
+
       } else {
-        alert("Algo va mal");
-        return;
+        alert("El usuario como mínimo debe tener 4 caracteres y la contraseña 6 caracteres")
       }
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -211,16 +213,6 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-    <Modal animationType="slide" visible={modal} transparent>
-      <View style={{ flex: 1,/*  alignItems: "center", justifyContent: "center" */ }}>
-        <View style={styles.modal}>
-          <Text style={styles.textoModal}>
-            Algo mal
-          </Text>
-          <Pressable onPress={() => cambiarModal()} style={styles.botonModal}><Text>Okey</Text></Pressable>
-        </View>
-      </View>
-    </Modal>
     <View style={styles.viewLogin}>
       <Text style={styles.h1Login}>VitalPower</Text>
       <FlipCard

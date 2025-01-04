@@ -7,8 +7,6 @@ const consultas = {
     try {
       await db.execAsync(`PRAGMA journal_mode = WAL;`);
       await db.execAsync('PRAGMA foreign_keys = ON;');
-      
-      await db.execAsync(`DROP TABLE IF EXISTS usuarios`);
 
       // Crear tabla usuarios si no existe
       await db.execAsync(`
@@ -43,31 +41,30 @@ const consultas = {
     await execQuery.resetAsync();
 
     let respuesta;
-    resultado ? respuesta = resultado.usuario : respuesta = null;
+    resultado ? respuesta = resultado.usuario : respuesta = false;
     return respuesta;
 
   },
 
 
-  insert: (usuario) => {
-    return new Promise((resolve, reject) => {
+  registro: async ( usuarioObj ) => {
 
-      db.withTransactionAsync(async () => {
+    console.log("registrando...")
 
-        console.log("oy");
-        try {
-          const query = await db.runAsync(
-            `insert into usuarios values 
-            ('${usuario.nombre}', '${usuario.clave}')`
-          );
-          resolve(query);
-        } catch (error) {
-          reject(error);
-        }
-      });
-    });
+    const { usuario, clave } = usuarioObj;
+    
+    const db = await SQLite.openDatabaseAsync('VitalPower');
+
+    /* const queryString = `SELECT usuario, clave FROM usuarios WHERE usuario = '${usuario}' and clave = '${clave}'`;
+    console.log('Consulta SQL:', queryString); */
+
+    const query = await db.runAsync(`INSERT INTO usuarios (usuario, clave) VALUES (?, ?)`, usuario, clave)
+
+    let respuesta;
+    query ? respuesta = true : respuesta = false;
+    return respuesta;
+
   },
-
 
 };
 
