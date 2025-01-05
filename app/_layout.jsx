@@ -9,17 +9,12 @@ import Menu from "./menu";
 
 export default function Layout() {
 
-  const [menu, setMenu] = useState(false);
-
-  // Modificar el estado de la animación
-  const [isPressed, setIsPressed] = useState(false);
-  const handlePressIn = () => setIsPressed(true);
-  const handlePressOut = () => setIsPressed(false);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   // Función para mostrar u ocultar el menú
-  function mostrarMenu() {
-    setMenu(!menu);
-  }
+  const mostrarMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
 
   // Función de logout
   const logout = async () => {
@@ -30,13 +25,11 @@ export default function Layout() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style="light" backgroundColor="black" />
-      <Pressable style={{ flex: 1 }} onPress={() => { menu ? mostrarMenu() : null; }}>
         <Stack
           screenOptions={({ route }) => ({
             headerShown: route.name !== "index",
             headerStyle: {
               backgroundColor: "#303030",
-              paddingTop: 0,
             },
             headerTitleAlign: "center",
             headerTitle: () => (
@@ -48,24 +41,19 @@ export default function Layout() {
             ),
             headerLeft: () => (
               <Pressable onPress={mostrarMenu}
-                onPressIn={ handlePressIn }
-                onPressOut={ handlePressOut }
                 style={({ pressed }) => [{ backgroundColor: pressed ? 'grey' : null }]}>
                 <MaterialCommunityIcons name="menu" size={35} color="#f8ad2a" />
               </Pressable>
             ),
             headerRight: () => (
               <Pressable onPress={logout}
-                onPressIn={ handlePressIn }
-                onPressOut={ handlePressOut }
                 style={({ pressed }) => [{ backgroundColor: pressed ? 'grey' : null }]}>
                 <MaterialCommunityIcons name="logout" size={35} color="#f8ad2a" />
               </Pressable>
             ),
           })}
         />
-      </Pressable>
-      {menu && <Menu mostrarMenu={mostrarMenu} />}
+      <Menu menuVisible={menuVisible} mostrarMenu={mostrarMenu} />
     </SafeAreaView>
   );
 }

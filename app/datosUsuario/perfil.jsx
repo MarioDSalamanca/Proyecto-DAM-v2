@@ -10,27 +10,27 @@ export default function Perfil() {
     <View style={styles.container}>
       <View style={styles.perfilLayout}>
         <View>
-          <Text style={styles.h2Login}>Contraseña:</Text>
+          <Text style={styles.h2Login}>Usuario:</Text>
           <TextInput style={styles.inputsLogin} />
         </View>
         <View>
-          <Text style={styles.h2Login}>Contraseña:</Text>
+          <Text style={styles.h2Login}>Clave:</Text>
           <TextInput style={styles.inputsLogin} />
         </View>
         <View>
-          <Text style={styles.h2Login}>Contraseña:</Text>
+          <Text style={styles.h2Login}>Edad:</Text>
           <TextInput style={styles.inputsLogin} />
         </View>
         <View>
-          <Text style={styles.h2Login}>Contraseña:</Text>
+          <Text style={styles.h2Login}>Peso:</Text>
           <TextInput style={styles.inputsLogin} />
         </View>
         <View>
-          <Text style={styles.h2Login}>Contraseña:</Text>
+          <Text style={styles.h2Login}>Altura:</Text>
           <TextInput style={styles.inputsLogin} />
         </View>
         <View>
-          <Text style={styles.h2Login}>Contraseña:</Text>
+          <Text style={styles.h2Login}>Género:</Text>
           <TextInput style={styles.inputsLogin} />
         </View>
       </View>

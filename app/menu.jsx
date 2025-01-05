@@ -1,11 +1,11 @@
-import { Pressable, View, Text } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { styles } from '../style/estilos';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { View, Text, Pressable, Modal, StyleSheet } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from 'expo-router';
+import { styles } from "../style/estilos";
 
-export default function Menu({ mostrarMenu }) {
+export default function Menu({ menuVisible, mostrarMenu }) {
 
   // Estados para mostrar el nombre del usuario y la animación del menú
   const [usuario, setUsuario] = useState('');
@@ -22,49 +22,71 @@ export default function Menu({ mostrarMenu }) {
   }, []);
 
   return (
-    <View style={ styles.menu }>
-      <View style={ styles.cabeceraMenu }>
-        <MaterialCommunityIcons name="account" size={30} color="black" style={styles.cabeceraIcono} />
-        <Text style={styles.cabeceraUsuario}>{usuario}</Text>
-        <Pressable onPress={mostrarMenu} style={ styles.cerrarMenu }>
-          <MaterialCommunityIcons name="keyboard-backspace" size={30} color="white" />
-        </Pressable>
-      </View>
-      <View style={ styles.linksMenu }>
-      <Pressable onPress={() => { mostrarMenu(); router.replace('/datosUsuario/perfil'); }}
-          onPressIn={ handlePressIn }
-          onPressOut={ handlePressOut }
-          style={({ pressed }) => [{ backgroundColor: pressed ? 'white' : 'black' }, styles.cajaLinksMenu]}>
-          <Text style={[styles.linkMenu, { color: isPressed ? 'black' : 'white' }]}>
-          <MaterialCommunityIcons name="account-edit" size={18} color={ isPressed ? 'black' : 'white' } />    Mi Perfil
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => { mostrarMenu(); router.replace('/datosUsuario/datos'); }}
-          onPressIn={ handlePressIn }
-          onPressOut={ handlePressOut }
-          style={({ pressed }) => [{ backgroundColor: pressed ? 'white' : 'black' }, styles.cajaLinksMenu]}>
-          <Text style={[styles.linkMenu, { color: isPressed ? 'black' : 'white' }]}>
-          <MaterialCommunityIcons name="google-analytics" size={18} color={ isPressed ? 'black' : 'white' } />    Datos
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => { mostrarMenu(); router.replace('/datosUsuario/entrenamientos'); }}
-          onPressIn={ handlePressIn } 
-          onPressOut={ handlePressOut }
-          style={({ pressed }) => [{ backgroundColor: pressed ? 'white' : 'black' }, styles.cajaLinksMenu]}>
-          <Text style={[styles.linkMenu, { color: isPressed ? 'black' : 'white' }]}>
-          <MaterialCommunityIcons name="arm-flex-outline" size={18} color={ isPressed ? 'black' : 'white' } />    Entrenamientos
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => { mostrarMenu(); router.replace('/datosUsuario/info'); }}
-          onPressIn={ handlePressIn } 
-          onPressOut={ handlePressOut }
-          style={({ pressed }) => [{ backgroundColor: pressed ? 'white' : 'black' }, styles.cajaLinksMenu]}>
-          <Text style={[styles.linkMenu, { color: isPressed ? 'black' : 'white' }]}>
-            <MaterialCommunityIcons name="information-outline" size={18} color={ isPressed ? 'black' : 'white' } />    Info
-          </Text>
-        </Pressable>
-        
-      </View>
-    </View>
+      <Modal animationType="fade" transparent={true} visible={menuVisible} onRequestClose={mostrarMenu} >
+        <View style={styles.overlay}>
+          <View style={styles.menu}>
+            <View style={styles.cabeceraMenu}>
+              <MaterialCommunityIcons name="account" size={30} color="black" style={styles.cabeceraIcono} />
+              <Text style={styles.cabeceraUsuario}>{usuario}</Text>
+              <Pressable onPress={mostrarMenu} style={styles.cerrarMenu}>
+                <MaterialCommunityIcons name="close-circle-outline" size={30} color="white" />
+              </Pressable>
+            </View>
+            <View style={styles.linksMenu}>
+              <Pressable
+                onPress={() => {
+                  mostrarMenu();
+                  router.replace("/datosUsuario/perfil");
+                }}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu, ]} >
+                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }, ]} >
+                  <MaterialCommunityIcons name="account-edit" size={18} color={isPressed ? "black" : "white"} /> Mi Perfil
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => {
+                  mostrarMenu();
+                  router.replace("/datosUsuario/datos");
+                }}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu, ]} >
+                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }, ]} >
+                  <MaterialCommunityIcons name="google-analytics" size={18} color={isPressed ? "black" : "white"} /> Datos
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => {
+                  mostrarMenu();
+                  router.replace("/datosUsuario/entrenamientos");
+                }}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu, ]} >
+                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }, ]} >
+                  <MaterialCommunityIcons name="arm-flex-outline" size={18} color={isPressed ? "black" : "white"} /> Entrenamientos
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => {
+                  mostrarMenu();
+                  router.replace("/datosUsuario/info");
+                }}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu, ]} >
+                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }, ]} >
+                  <MaterialCommunityIcons name="information-outline" size={18} color={isPressed ? "black" : "white"} /> Info
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
   );
 }

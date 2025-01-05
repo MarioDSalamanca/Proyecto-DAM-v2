@@ -22,8 +22,9 @@ const styles = StyleSheet.create({
       fontStyle: "italic",
     },
     login: {
-      width: 320,
+      width: "90%",
       height: 'auto',
+      margin: 'auto',
       backgroundColor: "white",
       borderWidth: 1,
       borderColor: "#f8ad2a",
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
       color: "white",
     },
     botonRegistrarse: {
-      width: 200,
+      width: "70%",
       backgroundColor: "white",
       padding: 5,
       textAlign: "center",
@@ -88,48 +89,54 @@ const styles = StyleSheet.create({
 
   // Menú
 
-    menu: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      width: "80%",
-      backgroundColor: "black",
-      zIndex: 10,
-      paddingVertical: 60,
-      paddingHorizontal: 25,
-      flexDirection: "column",
-    },
-    cabeceraMenu: {
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    cabeceraIcono: {
-      backgroundColor: "white",
-      borderRadius: 50,
-      padding: 2,
-    },
-    cabeceraUsuario: {
-      color: "white",
-      margin: "auto",
-      fontWeight: "500",
-      fontSize: 22,
-    },
-    cerrarMenu: {},
-    linksMenu: {
-      flexDirection: "column",
-      paddingVertical: 40,
-    },
-    cajaLinksMenu: {
-      borderTopWidth: 1,
-      borderBottomWidth: 1,
-      borderColor: "white",
-    },
-    linkMenu: {
-      padding: 20,
-      color: "white",
-      fontSize: 15,
-    },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  menu: {
+    width: "80%",
+    backgroundColor: "black",
+    borderRadius: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 25,
+    flexDirection: "column",
+  },
+  cabeceraMenu: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  cabeceraIcono: {
+    backgroundColor: "white",
+    borderRadius: 50,
+    padding: 2,
+  },
+  cabeceraUsuario: {
+    color: "white",
+    marginLeft: 20,
+    fontWeight: "500",
+    fontSize: 22,
+    flex: 1,
+  },
+  cerrarMenu: {
+    padding: 5,
+  },
+  linksMenu: {
+    flexDirection: "column",
+    paddingVertical: 20,
+  },
+  cajaLinksMenu: {
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "white",
+  },
+  linkMenu: {
+    padding: 20,
+    color: "white",
+    fontSize: 15,
+  },
 
   // Home
 
@@ -141,8 +148,8 @@ const styles = StyleSheet.create({
       padding: 10,
     },
     homeLayouts: {
-      width: "45%",
-      height: "20%",
+      width: "90%",
+      height: "15%",
       backgroundColor: "#f8ad2a",
       padding: 15,
       marginVertical: 15,
@@ -152,7 +159,7 @@ const styles = StyleSheet.create({
     },
     textoHome: {
       fontWeight: "500",
-      fontSize: 15,
+      fontSize: 16,
       color: 'white',
       textShadowColor: 'black',
       textShadowOffset: { width: 2, height: 2 },
