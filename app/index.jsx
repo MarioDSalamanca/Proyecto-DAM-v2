@@ -9,15 +9,15 @@ import Animated, {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
-import consultas from "./consultas/login";
+import consultasIndex from "./consultas/login";
 
 // Funciones y constantes para el efecto visual del login
 const InicioSesion = ({ vuelta, validar, setUsuario, setClave, usuario, clave }) => {
   return (
     <View style={styles.login}>
-      <Text style={styles.h2Login}>Nombre de usuario:</Text>
+      <Text style={styles.labelLogin}>Nombre de usuario:</Text>
       <TextInput style={styles.inputsLogin} value={usuario} onChangeText={setUsuario} />
-      <Text style={styles.h2Login}>Contraseña:</Text>
+      <Text style={styles.labelLogin}>Contraseña:</Text>
       <TextInput style={styles.inputsLogin} secureTextEntry value={clave} onChangeText={setClave} />
       <Pressable
        onPress={() => validar("inicioSesion")}
@@ -37,11 +37,11 @@ const InicioSesion = ({ vuelta, validar, setUsuario, setClave, usuario, clave })
 const Registrate = ({ vuelta, validar, setUsuario, setClave, setClave2,  usuario, clave, clave2 }) => {
   return (
     <View style={styles.login}>
-      <Text style={styles.h2Login}>Nombre de usuario:</Text>
+      <Text style={styles.labelLogin}>Nombre de usuario:</Text>
       <TextInput style={styles.inputsLogin} value={usuario} onChangeText={setUsuario} />
-      <Text style={styles.h2Login}>Contraseña:</Text>
+      <Text style={styles.labelLogin}>Contraseña:</Text>
       <TextInput style={styles.inputsLogin} secureTextEntry value={clave} onChangeText={setClave} />
-      <Text style={styles.h2Login}>Confirmar contraseña:</Text>
+      <Text style={styles.labelLogin}>Confirmar contraseña:</Text>
       <TextInput style={styles.inputsLogin} secureTextEntry value={clave2} onChangeText={setClave2} />
       <Pressable
         onPress={() => validar("registro")}
@@ -130,7 +130,7 @@ export default function Index() {
     // Comprobar si ya se ha iniciado sesión e inicializar db
     useEffect(() => {
 
-      consultas.inicializarDB();
+      consultasIndex.inicializarDB();
 
       const comprobarAuth = async () => {
 
@@ -158,7 +158,7 @@ export default function Index() {
       if (usuario.length > 3 && clave.trim().length > 6) {
 
         const usuarioObj = { usuario: usuario, clave: clave };
-        const respuesta = await consultas.login(usuarioObj);
+        const respuesta = await consultasIndex.login(usuarioObj);
 
         if (respuesta) {
 
@@ -167,33 +167,24 @@ export default function Index() {
           router.replace('/home');
 
         } else {
-
           alert("Usuario o contraseña incorrecto");
-
         }
         
       } else {
-
         alert('Datos insuficientes para iniciar sesión');
-
       }
     }
     if (evento == 'registro') {
+      if (clave != clave2) {
+        alert("Las contraseñas no coinciden");
+      }
       if (usuario.trim().length > 3 && clave.trim().length >= 6 && clave == clave2) {
         
         const usuarioObj = { usuario: usuario, clave: clave };
-        const respuesta = await consultas.registro(usuarioObj);
+        const respuesta = await consultasIndex.registro(usuarioObj);
 
-        if (respuesta) {
-
-          alert("Usuario registrado con éxito");
-          vuelta(); 
-
-        } else {
-
-          alert("No se ha podido realizar el registro, intentalo más tarde");
-
-        }
+        alert(respuesta.mensaje);
+        respuesta.estado ? vuelta() : null;
 
       } else {
         alert("El usuario como mínimo debe tener 4 caracteres y la contraseña 6 caracteres")

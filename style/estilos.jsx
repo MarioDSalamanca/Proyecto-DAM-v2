@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: "5%",
     backgroundColor: "#303030",
   },
 
@@ -11,12 +11,12 @@ const styles = StyleSheet.create({
 
     loginLayout: {
       alignItems: "center",
-      marginTop: 120,
+      marginTop: "25%",
     },
     h1Login: {
       color: "#f8ad2a",
       fontSize: 45,
-      marginBottom: 60,
+      marginBottom: "10%",
       fontWeight: "700",
       letterSpacing: 2,
       fontStyle: "italic",
@@ -29,30 +29,30 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderColor: "#f8ad2a",
       borderRadius: 5,
-      paddingVertical: 5,
-      paddingHorizontal: 20,
+      paddingVertical: "2%",
+      paddingHorizontal: "7%",
     },
-    h2Login: {
+    labelLogin: {
       fontSize: 20,
       fontStyle: "italic",
       color: "#f8ad2a",
       fontWeight: "500",
-      marginTop: 20,
+      marginTop: "7.5%",
     },
     inputsLogin: {
       borderBottomWidth: 1,
       borderBottomColor: "grey",
-      paddingTop: 5,
-      paddingLeft: 5,
+      paddingTop: "2%",
+      paddingLeft: "1.5%",
       fontSize: 18,
       fontStyle: "italic",
     },
     botonIniciarSesion: {
       backgroundColor: "#f8ad2a",
-      marginTop: 40,
-      padding: 5,
+      marginTop: "15%",
+      padding: "1.2%",
       textAlign: "center",
-      borderRadius: 3,
+      borderRadius: 5,
     },
     textoIniciarSesion: {
       textAlign: "center",
@@ -64,12 +64,12 @@ const styles = StyleSheet.create({
     botonRegistrarse: {
       width: "70%",
       backgroundColor: "white",
-      padding: 5,
+      padding: "1.2%",
       textAlign: "center",
-      borderRadius: 3,
+      borderRadius: 5,
       borderWidth: 1,
       borderColor: "#f8ad2a",
-      marginBottom: 20,
+      marginBottom: "7.5%",
     },
     textoRegistrarse: {
       textAlign: "center",
@@ -99,33 +99,33 @@ const styles = StyleSheet.create({
     width: "80%",
     backgroundColor: "black",
     borderRadius: 10,
-    paddingVertical: 20,
-    paddingHorizontal: 25,
+    paddingVertical: "7.5%",
+    paddingHorizontal: "6%",
     flexDirection: "column",
   },
   cabeceraMenu: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: "7.5%",
   },
   cabeceraIcono: {
     backgroundColor: "white",
     borderRadius: 50,
-    padding: 2,
+    padding: "1%",
   },
   cabeceraUsuario: {
     color: "white",
-    marginLeft: 20,
+    marginLeft: "7.5%",
     fontWeight: "500",
     fontSize: 22,
     flex: 1,
   },
   cerrarMenu: {
-    padding: 5,
+    padding: "1.2%",
   },
   linksMenu: {
     flexDirection: "column",
-    paddingVertical: 20,
+    paddingVertical: "7.5%",
   },
   cajaLinksMenu: {
     borderTopWidth: 1,
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
   },
   linkMenu: {
-    padding: 20,
+    padding: "7.5%",
     color: "white",
     fontSize: 15,
   },
@@ -145,14 +145,14 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "space-around",
-      padding: 10,
+      padding: "2%",
     },
     homeLayouts: {
       width: "90%",
       height: "15%",
       backgroundColor: "#f8ad2a",
       padding: 15,
-      marginVertical: 15,
+      marginVertical: "5%",
       borderWidth: 1.5,
       borderColor: "black",
       borderRadius: 5,
@@ -169,12 +169,46 @@ const styles = StyleSheet.create({
   // datosUsuario
 
     perfilLayout: {
-      backgroundColor: "white",
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "space-around",
-      padding: 10,      
+      padding: "2%",      
     },
+    perfilLayouts: {
+      width: "45%",
+      marginVertical: "5%",
+    },
+    labelPerfil: {
+      fontSize: 12,
+      paddingLeft: "1.5%",
+      color: "#f8ad2a",
+      fontWeight: "500",
+    },
+    inputsPerfil: {
+      borderBottomWidth: 1,
+      borderBottomColor: "white",
+      paddingTop: "2.%",
+      paddingLeft: "1.5%",
+      color: "white",
+      fontSize: 18,
+    },
+    botonPerfil: {
+      width: "90%",
+      backgroundColor: "white",
+      marginTop: "10%",
+      padding: "1.2%",
+      textAlign: "center",
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: "#f8ad2a",
+    },
+    textoPerfil: {
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: "500",
+      fontStyle: "italic",
+      color: "#f8ad2a",
+    }
 });
 
 export { styles };

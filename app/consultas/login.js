@@ -1,6 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 
-const consultas = {
+const consultasIndex = {
   inicializarDB: async () => {
     const db = await SQLite.openDatabaseAsync('VitalPower');
 
@@ -8,19 +8,18 @@ const consultas = {
       await db.execAsync(`PRAGMA journal_mode = WAL;`);
       await db.execAsync('PRAGMA foreign_keys = ON;');
 
-      await db.execAsync(`DROP TABLE IF EXISTS usuarios`);
+      //await db.execAsync(`DROP TABLE IF EXISTS usuarios`);
 
       // Crear tabla usuarios si no existe
       await db.execAsync(`
         CREATE TABLE IF NOT EXISTS usuarios (
           id INTEGER PRIMARY KEY,
-          usuario TEXT NOT NULL ,
+          usuario TEXT NOT NULL UNIQUE,
           clave TEXT NOT NULL,
           edad INTEGER,
           peso REAL,
           altura REAL,
-          genero TEXT,
-          UNIQUE usuario
+          genero TEXT
         );
       `);
       
@@ -29,20 +28,15 @@ const consultas = {
     }
   },
   login: async ( usuarioObj ) => {
+
     const db = await SQLite.openDatabaseAsync('VitalPower');
     
     const { usuario, clave } = usuarioObj;
-    
-    /* const queryString = `SELECT usuario, clave FROM usuarios WHERE usuario = '${usuario}' and clave = '${clave}'`;
-    console.log('Consulta SQL:', queryString); */
 
-    const query = await db.prepareAsync(`SELECT usuario, clave FROM usuarios WHERE usuario = ? and clave = ?`);
-    const execQuery = await query.executeAsync([usuario, clave]);
-    const resultado = await execQuery.getFirstAsync();
-    await execQuery.resetAsync();
+    const query = await db.getFirstAsync(`SELECT * FROM usuarios WHERE usuario = '${usuario}' and clave = '${clave}'`);
 
     let respuesta;
-    resultado ? respuesta = resultado.usuario : respuesta = false;
+    query != null ? respuesta = query.usuario : respuesta = false;
     return respuesta;
 
   },
@@ -51,13 +45,13 @@ const consultas = {
 
     const { usuario, clave } = usuarioObj;    
 
-    const query = await db.runAsync(`INSERT INTO usuarios (usuario, clave) VALUES (?, ?)`, usuario, clave)
+    const existe = await db.getFirstAsync(`SELECT * FROM usuarios WHERE usuario = '${usuario}'`);
+    if (existe) return { estado: false, mensaje: `Ya existe un usuario "${usuario}"` };
 
-    let respuesta;
-    query ? respuesta = true : respuesta = false;
-    return respuesta;
+    const query = await db.runAsync(`INSERT INTO usuarios (usuario, clave) VALUES (?, ?)`, usuario, clave)
+    if (query) return { estado: true, mensaje: `Usuario registrado con éxito` };
 
   },
 };
 
-export default consultas;
+export default consultasIndex;

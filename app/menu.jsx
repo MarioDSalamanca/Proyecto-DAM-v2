@@ -8,7 +8,7 @@ import { styles } from "../style/estilos";
 export default function Menu({ menuVisible, mostrarMenu }) {
 
   // Estados para mostrar el nombre del usuario y la animación del menú
-  const [usuario, setUsuario] = useState('');
+  const [usuario, setUsuario] = useState(null);
   const [isPressed, setIsPressed] = useState(false);
 
   // Modificar el estado de la animación
@@ -17,12 +17,18 @@ export default function Menu({ menuVisible, mostrarMenu }) {
 
   // Rescatar el usuario
   useEffect(() => {
-    const usuario = AsyncStorage.getItem("usuario");
-    setUsuario(usuario);
+
+    const getUsuario = async () => {
+      const getUsuario = await AsyncStorage.getItem("usuario");
+      setUsuario(getUsuario);
+    };
+
+    getUsuario();
+
   }, []);
 
   return (
-      <Modal animationType="fade" transparent={true} visible={menuVisible} onRequestClose={mostrarMenu} >
+      <Modal animationType="slide" transparent={true} visible={menuVisible} onRequestClose={mostrarMenu} >
         <View style={styles.overlay}>
           <View style={styles.menu}>
             <View style={styles.cabeceraMenu}>
