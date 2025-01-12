@@ -177,8 +177,9 @@ export default function Index() {
     if (evento == 'registro') {
       if (clave != clave2) {
         alert("Las contraseñas no coinciden");
+        return;
       }
-      if (usuario.trim().length > 3 && clave.trim().length >= 6 && clave == clave2) {
+      if (usuario.trim().length >= 4 && clave.trim().length >= 6) {
         
         const usuarioObj = { usuario: usuario, clave: clave };
         const respuesta = await consultasIndex.registro(usuarioObj);
@@ -187,7 +188,7 @@ export default function Index() {
         respuesta.estado ? vuelta() : null;
 
       } else {
-        alert("El usuario como mínimo debe tener 4 caracteres y la contraseña 6 caracteres")
+        alert("El usuario como mínimo debe tener 4 caracteres y la contraseña 6 caracteres");
       }
     }
   };

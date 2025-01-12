@@ -19,6 +19,7 @@ export default function Layout() {
   // Función de logout
   const logout = async () => {
     await AsyncStorage.removeItem("authToken");
+    await AsyncStorage.removeItem("usuario");
     router.replace("/");
   };
 

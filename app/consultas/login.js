@@ -8,7 +8,7 @@ const consultasIndex = {
       await db.execAsync(`PRAGMA journal_mode = WAL;`);
       await db.execAsync('PRAGMA foreign_keys = ON;');
 
-      //await db.execAsync(`DROP TABLE IF EXISTS usuarios`);
+      await db.execAsync(`DROP TABLE IF EXISTS usuarios`);
 
       // Crear tabla usuarios si no existe
       await db.execAsync(`

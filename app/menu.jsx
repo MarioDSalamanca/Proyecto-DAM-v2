@@ -41,52 +41,60 @@ export default function Menu({ menuVisible, mostrarMenu }) {
             <View style={styles.linksMenu}>
               <Pressable
                 onPress={() => {
-                  mostrarMenu();
-                  router.replace("/datosUsuario/perfil");
+                  setTimeout(() => {
+                    mostrarMenu();
+                    router.replace("/datosUsuario/perfil");
+                  }, 200);
                 }}
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}
-                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu, ]} >
-                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }, ]} >
+                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu]} >
+                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }]} >
                   <MaterialCommunityIcons name="account-edit" size={18} color={isPressed ? "black" : "white"} /> Mi Perfil
                 </Text>
               </Pressable>
 
               <Pressable
                 onPress={() => {
-                  mostrarMenu();
-                  router.replace("/datosUsuario/datos");
+                  setTimeout(() => {
+                    mostrarMenu();
+                    router.replace("/datosUsuario/datos");
+                  }, 200);
                 }}
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}
-                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu, ]} >
-                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }, ]} >
+                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu]} >
+                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }]} >
                   <MaterialCommunityIcons name="google-analytics" size={18} color={isPressed ? "black" : "white"} /> Datos
                 </Text>
               </Pressable>
 
               <Pressable
                 onPress={() => {
-                  mostrarMenu();
-                  router.replace("/datosUsuario/entrenamientos");
+                  setTimeout(() => {
+                    mostrarMenu();
+                    router.replace("/datosUsuario/entrenamientos");
+                  }, 200);
                 }}
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}
-                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu, ]} >
-                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }, ]} >
+                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu]} >
+                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }]} >
                   <MaterialCommunityIcons name="arm-flex-outline" size={18} color={isPressed ? "black" : "white"} /> Entrenamientos
                 </Text>
               </Pressable>
 
               <Pressable
                 onPress={() => {
-                  mostrarMenu();
-                  router.replace("/datosUsuario/info");
+                  setTimeout(() => {
+                    mostrarMenu();
+                    router.replace("/datosUsuario/info");
+                  }, 200);
                 }}
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}
-                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu, ]} >
-                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }, ]} >
+                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu]} >
+                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }]} >
                   <MaterialCommunityIcons name="information-outline" size={18} color={isPressed ? "black" : "white"} /> Info
                 </Text>
               </Pressable>

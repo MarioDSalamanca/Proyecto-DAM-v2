@@ -23,25 +23,26 @@ const consultasDatosUsuario = {
     return respuesta;
 
   },
-  update: async ( usuarioObj ) => {
+  update: async ( formDatos ) => {
     const db = await SQLite.openDatabaseAsync('VitalPower');
 
-    const { usuarioAntiguo, usuario, clave, edad, peso, altura, genero } = usuarioObj;
-    
+    const { usuarioAntiguo, usuario, clave, edad, peso, altura, genero } = formDatos;
+
+    console.log("Datos en el update: ", formDatos)
+
     if (usuarioAntiguo != usuario) {
 
       const select = await db.getFirstAsync(`SELECT * FROM usuarios WHERE usuario = '${usuario}'`);
-      if (select != null) return false;
+      if (select != null) return { estado: false, mensaje: `Ya existe un usuario "${usuario}"` };
       
     }
 
-    const query = await db.runAsync(`UPDATE usuarios SET 
-     usuario = ? and clave = ? and edad = ? and peso = ? and altura = ? and genero = ? WHERE usuario = ?`, 
+    const update = await db.runAsync(`UPDATE usuarios SET 
+     usuario = ?, clave = ?, edad = ?, peso = ?, altura = ?, genero = ? WHERE usuario = ?`, 
      usuario, clave, edad, peso, altura, genero, usuarioAntiguo);
 
-    let respuesta;
-    query ? respuesta = true : respuesta = false;
-    return respuesta;
+    if (update.changes == 1) return { estado: true, mensaje: 'Usuario actualizado' }
+    else return { estado: false, mensaje: 'No se ha podido actualizar el usuario' }
 
   },
 };
