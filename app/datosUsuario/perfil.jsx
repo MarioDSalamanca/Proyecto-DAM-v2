@@ -3,12 +3,13 @@ import { styles } from '../../style/estilos';
 import { useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import consultasDatosUsuario from '../consultas/datosUsuario';
+import { Picker } from '@react-native-picker/picker';
 
 export default function Perfil() {
 
   const [usuario, setUsuario] = useState(null);
   const [respuesta, setRespuesta] = useState(null);
-  const [formDatos, setFormDatos] = useState(null);
+  const [formDatos, setFormDatos] = useState({});
 
   useEffect(() => {
 
@@ -28,14 +29,16 @@ export default function Perfil() {
       const getRespuesta = await consultasDatosUsuario.select(usuario);
       setRespuesta(getRespuesta);
 
+      console.log("Respuesta: ", getRespuesta)
+
       setFormDatos({
         usuarioAntiguo: getRespuesta.usuario,
         usuario: getRespuesta.usuario,
         clave: getRespuesta.clave,
-        edad: getRespuesta.edad || null,
-        peso: getRespuesta.peso || null,
-        altura: getRespuesta.altura || null,
-        genero: getRespuesta.genero || null
+        edad: getRespuesta.edad,
+        peso: getRespuesta.peso,
+        altura: getRespuesta.altura,
+        genero: getRespuesta.genero
       });
     };
 
@@ -48,9 +51,7 @@ export default function Perfil() {
         
     const hayCambios = Object.keys(formDatos)
       .filter((key) => key !== 'usuarioAntiguo')
-      .some((key) => {
-        console.log(`Comparando ${key}: ${formDatos[key]} !== ${respuesta[key]}`);
-        return formDatos[key] !== respuesta[key]});
+      .some((key) => { return formDatos[key] !== respuesta[key] });
 
     if (hayCambios) {
       if (formDatos.usuario.length < 4) {
@@ -61,32 +62,19 @@ export default function Perfil() {
         alert("La clave como mínimo debe tener 6 caracteres");
         return;
       }
-
-      /* setUsuario(formDatos.usuario); */
       
       const actualizar = await consultasDatosUsuario.update(formDatos);
-
       alert(actualizar.mensaje);
-      console.log("Respuesta: ", respuesta);
-      console.log("FormDatos: ", formDatos);
-      console.log("Usuario: ", usuario);
-
 
       if (actualizar.estado == true) {
 
-        await AsyncStorage.removeItem("usuario");
         await AsyncStorage.setItem("usuario", formDatos.usuario);
-
-        // No refresca bien
 
       } else {
         alert("Algo ha salido mal")
       }
 
     } else {
-      console.log("Respuesta: ", respuesta);
-      console.log("FormDatos: ", formDatos);
-      console.log("Usuario: ", usuario);
       alert("No se ha modificado ningun dato");
     }
 
@@ -98,13 +86,14 @@ export default function Perfil() {
       [name]: value,
     }));      
   };
+  console.log("FormDatos: ", formDatos)
 
   return (
     <View style={styles.container}>
       <View style={styles.perfilLayout}>
         <View style={styles.perfilLayouts}>
           <Text style={styles.labelPerfil}>Usuario:</Text>
-          <TextInput style={styles.inputsPerfil} value={formDatos?.usuario || 'error'} onChangeText={(value) => actualizarDatos('usuario', value)} />
+          <TextInput style={styles.inputsPerfil} value={formDatos.usuario ? formDatos.usuario : ''} onChangeText={(value) => actualizarDatos('usuario', value)} />
         </View>
         <View style={styles.perfilLayouts}>
           <Text style={styles.labelPerfil}>Clave:</Text>
@@ -112,19 +101,23 @@ export default function Perfil() {
         </View>
         <View style={styles.perfilLayouts}>
           <Text style={styles.labelPerfil}>Edad:</Text>
-          <TextInput style={styles.inputsPerfil} value={formDatos?.edad || 'error'} onChangeText={(value) => actualizarDatos('edad', value)} keyboardType="numeric" />
+          <TextInput style={styles.inputsPerfil} value={formDatos.edad ? formDatos.edad.toString() : ''} onChangeText={(value) => actualizarDatos('edad', value)} keyboardType="decimal-pad" />
         </View>
         <View style={styles.perfilLayouts}>
           <Text style={styles.labelPerfil}>Peso:</Text>
-          <TextInput style={styles.inputsPerfil} value={formDatos?.peso || 'error'} onChangeText={(value) => actualizarDatos('peso', value)} keyboardType="numeric" />
+          <TextInput style={styles.inputsPerfil} value={formDatos.peso ? formDatos.peso.toString() : ''} onChangeText={(value) => actualizarDatos('peso', value)} keyboardType="decimal-pad" />
         </View>
         <View style={styles.perfilLayouts}>
           <Text style={styles.labelPerfil}>Altura:</Text>
-          <TextInput style={styles.inputsPerfil} value={formDatos?.altura || 'error'} onChangeText={(value) => actualizarDatos('altura', value)} keyboardType="numeric" />
+          <TextInput style={styles.inputsPerfil} value={formDatos.altura ? formDatos.altura.toString() : ''} onChangeText={(value) => actualizarDatos('altura', value)} keyboardType="decimal-pad" />
         </View>
         <View style={styles.perfilLayouts}>
           <Text style={styles.labelPerfil}>Género:</Text>
-          <TextInput style={styles.inputsPerfil} value={formDatos?.genero || 'error'} onChangeText={(value) => actualizarDatos('genero', value)} />
+          <Picker selectedValue={formDatos.genero ? formDatos.genero : ''} onValueChange={(value) => actualizarDatos('genero', value)} style={styles.inputsPerfil} >
+            <Picker.Item label="" value="" />
+            <Picker.Item label="Masculino" value="Masculino" />
+            <Picker.Item label="Femenino" value="Femenino" />
+          </Picker>
         </View>
         <Pressable onPress={guardar} style={({ pressed }) => [{ backgroundColor: pressed ? "#f8ad2a" : "white" }, styles.botonPerfil]} >
           <Text style={styles.textoPerfil}>Guardar</Text>

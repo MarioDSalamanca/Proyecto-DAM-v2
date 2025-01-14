@@ -39,7 +39,7 @@ const consultasDatosUsuario = {
 
     const update = await db.runAsync(`UPDATE usuarios SET 
      usuario = ?, clave = ?, edad = ?, peso = ?, altura = ?, genero = ? WHERE usuario = ?`, 
-     usuario, clave, edad, peso, altura, genero, usuarioAntiguo);
+     [usuario, clave, edad, peso, altura, genero, usuarioAntiguo]);
 
     if (update.changes == 1) return { estado: true, mensaje: 'Usuario actualizado' }
     else return { estado: false, mensaje: 'No se ha podido actualizar el usuario' }
