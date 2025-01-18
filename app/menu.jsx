@@ -33,7 +33,7 @@ export default function Menu({ menuVisible, mostrarMenu }) {
           <View style={styles.menu}>
             <View style={styles.cabeceraMenu}>
               <MaterialCommunityIcons name="account" size={30} color="black" style={styles.cabeceraIcono} />
-              <Text style={styles.cabeceraUsuario}>{usuario}</Text>
+              <Text style={styles.cabeceraUsuario}>{usuario ? usuario : "Usuario"}</Text>
               <Pressable onPress={mostrarMenu} style={styles.cerrarMenu}>
                 <MaterialCommunityIcons name="close-circle-outline" size={30} color="white" />
               </Pressable>

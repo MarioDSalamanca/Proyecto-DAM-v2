@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: "5%",
+    paddingVertical: "2%",
     backgroundColor: "#303030",
   },
 
@@ -11,18 +11,18 @@ const styles = StyleSheet.create({
 
     loginLayout: {
       alignItems: "center",
-      marginTop: "25%",
+      marginTop: "20%",
     },
     h1Login: {
       color: "#f8ad2a",
       fontSize: 45,
-      marginBottom: "10%",
+      marginBottom: "15%",
       fontWeight: "700",
       letterSpacing: 2,
       fontStyle: "italic",
     },
     login: {
-      width: "90%",
+      width: 300,
       height: 'auto',
       margin: 'auto',
       backgroundColor: "white",
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
       textShadowRadius: 1,      
     },
 
-  // datosUsuario
+  // Perfil
 
     perfilLayout: {
       flexDirection: "row",
@@ -208,7 +208,51 @@ const styles = StyleSheet.create({
       fontWeight: "500",
       fontStyle: "italic",
       color: "#f8ad2a",
-    }
+    },
+
+  // Datos
+
+    datosUsuario: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-around",
+      alignItems: "center",
+      paddingVertical: "3%",
+      marginHorizontal: "3%",
+      borderBottomWidth: 1,
+      borderColor: "#f8ad2a",
+    },
+    textoDatosUsuario: {
+      color: "white",
+      fontSize: 15,
+    },
+    datosEntrenamientos: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-around",
+      alignItems: "center",
+      marginHorizontal: "2%",
+      marginVertical: "3%",
+    },
+    textoDatosEntrenamientos: {
+      color: "white",
+      fontSize: 15,
+    },
+    datosEjercicios:{
+      flexDirection: "row",
+      alignItems: "center",
+      padding: "2%",
+      justifyContent:"space-between",
+    },
+    celdaEjercicios: {
+      justifyContent: "center",
+      alignItems: "center",
+      width: "25%",
+    },
+    textoDatosEjercicios:{
+      fontSize: 15,
+      textAlign: "center",
+    },   
 });
 
 export { styles };

@@ -26,10 +26,8 @@ export default function Perfil() {
   useEffect(() => {
 
     const getDatosUsuario = async () => {
-      const getRespuesta = await consultasDatosUsuario.select(usuario);
+      const getRespuesta = await consultasDatosUsuario.selectPerfil(usuario);
       setRespuesta(getRespuesta);
-
-      console.log("Respuesta: ", getRespuesta)
 
       setFormDatos({
         usuarioAntiguo: getRespuesta.usuario,
@@ -63,7 +61,7 @@ export default function Perfil() {
         return;
       }
       
-      const actualizar = await consultasDatosUsuario.update(formDatos);
+      const actualizar = await consultasDatosUsuario.updatePerfil(formDatos);
       alert(actualizar.mensaje);
 
       if (actualizar.estado == true) {
@@ -86,7 +84,6 @@ export default function Perfil() {
       [name]: value,
     }));      
   };
-  console.log("FormDatos: ", formDatos)
 
   return (
     <View style={styles.container}>

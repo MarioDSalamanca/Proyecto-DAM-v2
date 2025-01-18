@@ -17,7 +17,6 @@ const consultasIndex = {
       for (tabla of tablasNecesarias) {
         const resultado = await db.getFirstAsync(`SELECT name FROM sqlite_master WHERE type='table' AND name='${tabla}';`);
         if (resultado) tablasExistentes.push(tabla);
-        console.log(`Verificando si la tabla '${tabla}' existe... ${resultado}`);
       }
       
       if (tablasExistentes.length != 3) {
@@ -36,7 +35,7 @@ const consultasIndex = {
               peso REAL,
               altura REAL,
               genero TEXT);`);
-            
+
           await db.execAsync(`
             INSERT INTO usuarios (usuario, clave, edad, peso, altura, genero) VALUES
               ('Mario', 'Mario123', 23, 66, 1.73, 'Masculino');`);
@@ -58,16 +57,16 @@ const consultasIndex = {
           // Datos de relleno para tabla entrenamientos
           await db.execAsync(`
             INSERT INTO entrenamientos (usuario_id, duracion, num_ejercicios, fecha) VALUES
-              (1, '45 minutos', 3, '2025-01-01'),
-              (1, '50 minutos', 3, '2025-01-03'),
-              (1, '60 minutos', 4, '2025-01-05'),
-              (1, '40 minutos', 3, '2025-01-07'),
-              (1, '30 minutos', 2, '2025-01-09'),
-              (1, '35 minutos', 2, '2025-01-11'),
-              (1, '45 minutos', 3, '2025-01-13'),
-              (1, '55 minutos', 4, '2025-01-15'),
-              (1, '30 minutos', 3, '2025-01-17'),
-              (1, '50 minutos', 3, '2025-01-19');`);
+              (1, '45 minutos', 3, '01/01/2025'),
+              (1, '50 minutos', 3, '03/01/2025'),
+              (1, '60 minutos', 4, '05/01/2025'),
+              (1, '40 minutos', 3, '07/01/2025'),
+              (1, '30 minutos', 2, '09/01/2025'),
+              (1, '35 minutos', 2, '11/01/2025'),
+              (1, '45 minutos', 3, '13/01/2025'),
+              (1, '55 minutos', 4, '15/01/2025'),
+              (1, '30 minutos', 3, '17/01/2025'),
+              (1, '50 minutos', 3, '19/01/2025');`);
               
           console.log(`Se ha creado la tabla entrenamientos`);
         }
@@ -122,6 +121,18 @@ const consultasIndex = {
           console.log(`Se ha creado la tabla ejercicios`);
         }
       }
+
+      // Mostrar datos de las tablas
+      /*console.log('Mostrando datos de las tablas...');
+
+      const usuarios = await db.getAllAsync('SELECT * FROM usuarios;');
+      const entrenamientos = await db.getAllAsync('SELECT * FROM entrenamientos;');
+      const ejercicios = await db.getAllAsync('SELECT * FROM ejercicios;');
+
+      console.log('Usuarios:', usuarios);
+      console.log('Entrenamientos:', entrenamientos);
+      console.log('Ejercicios:', ejercicios);*/
+
     } catch(err) {
       console.log("Error: ", err)
     }
