@@ -252,7 +252,62 @@ const styles = StyleSheet.create({
     textoDatosEjercicios:{
       fontSize: 15,
       textAlign: "center",
-    },   
+    },
+
+  // Entrenamientos
+
+    entrenamientosLayout: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      padding: "2%",
+    },
+    entrenamientosLayouts: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      marginVertical: "1%",
+      width: "90%",
+      marginLeft: "5%",
+    },
+    labelEntrenamientos: {
+      fontSize: 15,
+      color: "#f8ad2a",
+      fontWeight: "500",
+      width: "20%",
+    },
+    inputsEntrenamientos: {
+      backgroundColor: "black",
+      borderRadius: 5,
+      color: "white",
+      fontSize: 15,
+      width: "20%",
+      marginHorizontal: "1%",
+      textAlign: "center",
+    },
+    textoEntrenamientos: {
+      color: "white",
+      fontSize: 15,
+    },
+    filtroEntrenamientos: {
+      color: "white",
+    },
+    guardarEntrenamiento: {
+      width: "90%",
+      backgroundColor: "white",
+      margin: "auto",
+      marginTop: "5%",
+      padding: "1.2%",
+      textAlign: "center",
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: "#f8ad2a",
+    },
+
+    piker: {
+      marginVertical: "5%",
+      borderBottomWidth: 1,
+      borderColor: "white",
+    }
 });
 
 export { styles };

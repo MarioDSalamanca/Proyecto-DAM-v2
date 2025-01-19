@@ -57,7 +57,10 @@ const consultasDatosUsuario = {
       let ejercicios = [];
 
       for (const entrenamiento of entrenamientos) {
-        const ejerciciosAsociados = await db.getAllAsync(`SELECT * FROM ejercicios WHERE entrenamiento_id = ${entrenamiento.id}`);
+        const ejerciciosAsociados = await db.getAllAsync(`
+          SELECT ejercicios.*, ejercicios_trabajados.* FROM ejercicios
+            INNER JOIN ejercicios_trabajados ON ejercicios.id = ejercicios_trabajados.ejercicio_id
+            WHERE ejercicios_trabajados.entrenamiento_id = ${entrenamiento.id}`);
         ejercicios = ejercicios.concat(ejerciciosAsociados);
       }
 
@@ -84,9 +87,28 @@ const consultasDatosUsuario = {
 
       const eliminar = await db.runAsync('DELETE FROM entrenamientos WHERE id = $id', { $id: entrenamiento.id });
 
-      console.log("Se ha eliminado")
-
       return eliminar;
+    },
+  // Entrenamientos
+    selectEjercicios: async () => {
+      const db = await SQLite.openDatabaseAsync('VitalPower');
+
+      const ejercicios = await db.getAllAsync(`SELECT * FROM ejercicios`);
+
+      return ejercicios;
+    },
+    selectEjerciciosFiltrados: async (grupo_muscular) => {
+      const db = await SQLite.openDatabaseAsync('VitalPower');
+
+      let ejercicios;
+
+      if (grupo_muscular == 'Todos') {
+        ejercicios = await db.getAllAsync(`SELECT * FROM ejercicios`);
+      } else {
+        ejercicios = await db.getAllAsync(`SELECT * FROM ejercicios WHERE grupo_muscular = '${grupo_muscular}'`);
+      }
+
+      return ejercicios;
     }
 };
 

@@ -108,7 +108,7 @@ export default function Perfil() {
           <Text style={styles.labelPerfil}>Altura:</Text>
           <TextInput style={styles.inputsPerfil} value={formDatos.altura ? formDatos.altura.toString() : ''} onChangeText={(value) => actualizarDatos('altura', value)} keyboardType="decimal-pad" />
         </View>
-        <View style={styles.perfilLayouts}>
+        <View style={[styles.perfilLayouts, styles.piker]}>
           <Text style={styles.labelPerfil}>Género:</Text>
           <Picker selectedValue={formDatos.genero ? formDatos.genero : ''} onValueChange={(value) => actualizarDatos('genero', value)} style={styles.inputsPerfil} >
             <Picker.Item label="" value="" />

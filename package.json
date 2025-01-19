@@ -21,7 +21,8 @@
     "react-native": "0.76.5",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area": "^0.5.1",
-    "@react-native-picker/picker": "2.9.0"
+    "@react-native-picker/picker": "2.9.0",
+    "expo-checkbox": "~4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

@@ -8,18 +8,19 @@ const consultasIndex = {
       
       /*await db.execAsync(`DROP TABLE IF EXISTS usuarios`);
       await db.execAsync(`DROP TABLE IF EXISTS entrenamientos`);
-      await db.execAsync(`DROP TABLE IF EXISTS ejercicios`);*/
+      await db.execAsync(`DROP TABLE IF EXISTS ejercicios`);
+      await db.execAsync(`DROP TABLE IF EXISTS ejercicios_trabajados`);*/
 
       // Comprobar que no existen las tablas
-      const tablasNecesarias = ['usuarios', 'entrenamientos', 'ejercicios'];
+      const tablasNecesarias = ['usuarios', 'entrenamientos', 'ejercicios', 'ejercicios_trabajados'];
       const tablasExistentes = [];
 
       for (tabla of tablasNecesarias) {
         const resultado = await db.getFirstAsync(`SELECT name FROM sqlite_master WHERE type='table' AND name='${tabla}';`);
-        if (resultado) tablasExistentes.push(tabla);
+        if (resultado != null) tablasExistentes.push(tabla);
       }
       
-      if (tablasExistentes.length != 3) {
+      if (tablasExistentes.length != 4) {
 
         await db.execAsync(`PRAGMA journal_mode = WAL;`);
         await db.execAsync(`PRAGMA foreign_keys = ON;`);
@@ -40,7 +41,8 @@ const consultasIndex = {
             INSERT INTO usuarios (usuario, clave, edad, peso, altura, genero) VALUES
               ('Mario', 'Mario123', 23, 66, 1.73, 'Masculino');`);
           
-          console.log(`Se ha creado la tabla usuarios`);
+          /*const usuarios = await db.getAllAsync('SELECT * FROM usuarios;');
+          console.log('Usuarios:', usuarios);*/
         }
 
         // Crear tabla entrenamientos si no existe
@@ -57,18 +59,24 @@ const consultasIndex = {
           // Datos de relleno para tabla entrenamientos
           await db.execAsync(`
             INSERT INTO entrenamientos (usuario_id, duracion, num_ejercicios, fecha) VALUES
-              (1, '45 minutos', 3, '01/01/2025'),
-              (1, '50 minutos', 3, '03/01/2025'),
-              (1, '60 minutos', 4, '05/01/2025'),
-              (1, '40 minutos', 3, '07/01/2025'),
-              (1, '30 minutos', 2, '09/01/2025'),
-              (1, '35 minutos', 2, '11/01/2025'),
-              (1, '45 minutos', 3, '13/01/2025'),
-              (1, '55 minutos', 4, '15/01/2025'),
-              (1, '30 minutos', 3, '17/01/2025'),
-              (1, '50 minutos', 3, '19/01/2025');`);
+              (1, '45 minutos', 4, '2025-01-01'),
+              (1, '30 minutos', 3, '2025-01-03'),
+              (1, '50 minutos', 5, '2025-01-05'),
+              (1, '60 minutos', 5, '2025-01-07'),
+              (1, '40 minutos', 4, '2025-01-09'),
+              (1, '35 minutos', 3, '2025-01-11'),
+              (1, '55 minutos', 4, '2025-01-13'),
+              (1, '45 minutos', 3, '2025-01-15'),
+              (1, '30 minutos', 4, '2025-01-17'),
+              (1, '50 minutos', 5, '2025-01-18'),
+              (1, '60 minutos', 5, '2025-01-19'),
+              (1, '40 minutos', 4, '2025-01-20'),
+              (1, '35 minutos', 3, '2025-01-21'),
+              (1, '45 minutos', 4, '2025-01-22'),
+              (1, '50 minutos', 5, '2025-01-23');`);
               
-          console.log(`Se ha creado la tabla entrenamientos`);
+          /*const entrenamientos = await db.getAllAsync('SELECT * FROM entrenamientos;');
+          console.log('Entrenamientos:', entrenamientos);*/
         }
 
         // Crear tabla ejercicios si no existe
@@ -76,63 +84,84 @@ const consultasIndex = {
           await db.execAsync(`
             CREATE TABLE IF NOT EXISTS ejercicios (
               id INTEGER PRIMARY KEY,
-              entrenamiento_id INTEGER NOT NULL,
               nombre TEXT NOT NULL,
               grupo_muscular TEXT NOT NULL,
-              descripcion TEXT NOT NULL,
-              series INTEGER NOT NULL,
-              repeticiones INTEGER NOT NULL,
-              FOREIGN KEY (entrenamiento_id) REFERENCES entrenamientos (id) ON DELETE CASCADE);`);
+              descripcion TEXT NOT NULL);`);
 
           // Datos de relleno para tabla ejercicios
           await db.execAsync(`
-            INSERT INTO ejercicios (entrenamiento_id, nombre, grupo_muscular, descripcion, series, repeticiones) VALUES
-              (1, 'Press de banca', 'Pectorales', 'Este ejercicio clásico trabaja principalmente los músculos pectorales mayores, pero también activa hombros y tríceps. Es clave para el desarrollo de fuerza en el tren superior.', 4, 12),
-              (1, 'Fondos en paralelas', 'Tríceps', 'Fortalece el tríceps y pecho, ayudando a mejorar la estabilidad de los hombros. Ideal para ganar fuerza funcional en movimientos empuje.', 3, 15),
-              (1, 'Press inclinado', 'Pectorales', 'Enfocado en la parte superior del pecho. Este movimiento también activa los deltoides frontales y contribuye al equilibrio muscular del torso.', 4, 10),
-              (2, 'Dominadas', 'Dorsales', 'Un movimiento compuesto que fortalece los dorsales, bíceps y músculos del core. Es esencial para construir una espalda ancha y mejorar la fuerza de tracción.', 4, 10),
-              (2, 'Remo con barra', 'Espalda', 'Desarrolla la musculatura media de la espalda mientras mejora la postura y la estabilidad del core. Es ideal para ganar densidad en la espalda.', 4, 12),
-              (2, 'Jalones al pecho', 'Dorsales', 'Alternativa a las dominadas que permite ajustar la carga para un desarrollo progresivo de la fuerza en los dorsales.', 4, 12),
-              (3, 'Sentadilla', 'Piernas', 'Fortalece los cuádriceps, glúteos y músculos estabilizadores. Este ejercicio básico mejora la potencia y la movilidad del tren inferior.', 5, 12),
-              (3, 'Peso muerto', 'Espalda baja', 'Trabaja espalda baja, glúteos y isquiotibiales. Es un ejercicio integral para mejorar la fuerza total del cuerpo.', 5, 10),
-              (3, 'Zancadas', 'Piernas', 'Mejora el equilibrio y la fuerza en las piernas. También activa los glúteos y fortalece los estabilizadores de las rodillas.', 4, 12),
-              (3, 'Hip thrust', 'Glúteos', 'Este movimiento específico maximiza la activación del glúteo mayor, siendo clave para mejorar el rendimiento deportivo y la postura.', 4, 15),
-              (4, 'Press militar', 'Hombros', 'Fortalece los deltoides y los músculos estabilizadores del core. Ayuda a ganar fuerza y mejorar el equilibrio en los movimientos de empuje.', 4, 10),
-              (4, 'Curl de bíceps', 'Bíceps', 'Aísla los músculos del bíceps, permitiendo un desarrollo equilibrado de los brazos. Mejora la estética y la fuerza funcional.', 4, 12),
-              (4, 'Elevaciones laterales', 'Hombros', 'Aísla los deltoides laterales para ensanchar visualmente los hombros. Mejora el equilibrio muscular en el tren superior.', 3, 15),
-              (5, 'Planchas', 'Core', 'Este ejercicio isométrico fortalece el core, incluyendo los músculos abdominales y lumbares. Mejora la estabilidad y la postura general.', 3, 30),
-              (5, 'Russian twists', 'Core', 'Trabaja los oblicuos y el recto abdominal mientras mejora la resistencia a la rotación. Ideal para desarrollar un core fuerte y funcional.', 3, 20),
-              (6, 'Burpees', 'Full body', 'Ejercicio funcional que trabaja todos los grupos musculares. Mejora la resistencia cardiovascular y la fuerza general.', 3, 15),
-              (6, 'Mountain climbers', 'Core', 'Este ejercicio dinámico fortalece el core y mejora la resistencia. También es ideal para quemar calorías rápidamente.', 3, 25),
-              (7, 'Remo Pendlay', 'Espalda', 'Mejora la fuerza en la parte superior de la espalda y en los estabilizadores del core. También optimiza la postura y la técnica.', 4, 12),
-              (7, 'Peso muerto sumo', 'Piernas', 'Enfocado en aductores y glúteos, esta variante reduce la carga en la espalda baja mientras trabaja la fuerza en el tren inferior.', 4, 10),
-              (7, 'Face pulls', 'Hombros', 'Fortalece los deltoides posteriores y mejora la salud de los hombros al equilibrar los músculos de empuje y tracción.', 3, 12),
-              (8, 'Step-ups', 'Piernas', 'Fortalece glúteos y cuádriceps mientras mejora el equilibrio y la coordinación. Perfecto para un trabajo funcional del tren inferior.', 4, 12),
-              (8, 'Overhead squat', 'Piernas', 'Desafío para la fuerza, estabilidad y movilidad. Este ejercicio activa todo el cuerpo, pero se centra en piernas y core.', 4, 10),
-              (8, 'Thrusters', 'Full body', 'Combinación de sentadilla y press, este ejercicio trabaja tanto el tren inferior como el superior, mejorando la resistencia y la potencia.', 4, 12),
-              (8, 'Kettlebell swings', 'Glúteos', 'Fortalece glúteos, espalda baja y core mientras mejora la potencia explosiva y la resistencia cardiovascular.', 4, 15),
-              (9, 'Snatch', 'Full body', 'Ejercicio olímpico que mejora la potencia y la coordinación. Activa todo el cuerpo, con un enfoque en la fuerza explosiva.', 4, 10),
-              (9, 'Push-ups', 'Pectorales', 'Fortalece el pecho, tríceps y hombros. Es un movimiento básico pero efectivo para el tren superior.', 4, 20),
-              (9, 'Abdominales bicicleta', 'Core', 'Trabaja los oblicuos y el recto abdominal de manera dinámica. Mejora la estabilidad y el control del tronco.', 3, 25),
-              (10, 'Extensiones de pierna', 'Cuádriceps', 'Aísla el cuádriceps y permite un control preciso del esfuerzo en cada repetición. Mejora la fuerza y la definición.', 4, 15),
-              (10, 'Curls femorales', 'Isquiotibiales', 'Aísla los músculos posteriores del muslo. Es ideal para fortalecer y prevenir desequilibrios musculares.', 4, 15),
-              (10, 'Farmer’s carry', 'Core', 'Fortalece el core, la fuerza de agarre y la resistencia general. También mejora la postura y la estabilidad.', 3, 30);`);
-    
-          console.log(`Se ha creado la tabla ejercicios`);
+            INSERT INTO ejercicios (nombre, grupo_muscular, descripcion) VALUES
+              ('Press de banca', 'Tren superior', 'El press de banca trabaja los músculos del pecho, tríceps y hombros. Se realiza acostado mientras se empuja una barra hacia arriba.'),
+              ('Sentadilla', 'Tren inferior', 'Ejercicio fundamental que fortalece muslos, glúteos y caderas. Involucra descender doblando las rodillas con el peso en los talones.'),
+              ('Dominadas', 'Tren superior', 'Las dominadas son un ejercicio de peso corporal que fortalece la espalda y bíceps tirando del cuerpo hacia una barra.'),
+              ('Peso muerto', 'Tren inferior', 'Ejercicio compuesto que trabaja glúteos, isquiotibiales, y zona lumbar levantando una barra desde el suelo.'),
+              ('Flexiones', 'Tren superior', 'Las flexiones desarrollan fuerza en el pecho, hombros y tríceps empujando el cuerpo hacia arriba desde el suelo.'),
+              ('Zancadas', 'Tren inferior', 'Movimiento unilateral que mejora equilibrio y fuerza en piernas al avanzar y bajar con control.'),
+              ('Press militar', 'Tren superior', 'Ejercicio que desarrolla fuerza en los deltoides al empujar una barra o mancuernas sobre la cabeza.'),
+              ('Planchas', 'Core', 'Ejercicio isométrico que fortalece el núcleo, manteniendo una posición estable y recta desde los hombros hasta los pies.'),
+              ('Curl de bíceps', 'Tren superior', 'El curl de bíceps se realiza doblando los codos con mancuernas o barra para desarrollar los músculos de los brazos.'),
+              ('Remo con barra', 'Tren superior', 'Fortalece la espalda alta y media al inclinar el torso y tirar de una barra hacia el abdomen.'),
+              ('Press inclinado', 'Tren superior', 'Variante del press de banca que se realiza en un banco inclinado para trabajar el pecho superior.'),
+              ('Abdominales', 'Core', 'Ejercicio clásico que fortalece los músculos abdominales al levantar el torso desde el suelo.'),
+              ('Elevaciones laterales', 'Tren superior', 'Trabaja los deltoides laterales levantando mancuernas hacia los lados con los brazos extendidos.'),
+              ('Hip thrust', 'Tren inferior', 'Ejercicio de aislamiento que fortalece glúteos empujando las caderas hacia arriba desde una posición sentada.'),
+              ('Extension de tríceps', 'Tren superior', 'Fortalece el tríceps estirando los codos con pesas, mancuernas o cuerda en polea.'),
+              ('Press con mancuernas', 'Tren superior', 'Variante del press que se realiza con mancuernas para un rango de movimiento más amplio y estabilidad.'),
+              ('Remo con mancuerna', 'Tren superior', 'Fortalece un lado de la espalda a la vez, tirando de una mancuerna hacia el torso desde una posición inclinada.'),
+              ('Elevaciones de talones', 'Tren inferior', 'Fortalece los músculos de la pantorrilla levantando los talones desde el suelo con control.'),
+              ('Press Arnold', 'Tren superior', 'Variante del press de hombros que combina un giro para trabajar los deltoides de manera completa.'),
+              ('Jalón al pecho', 'Tren superior', 'Se realiza con polea para trabajar la espalda alta y bíceps jalando la barra hacia el pecho.'),
+              ('Burpees', 'Cardio', 'Ejercicio de alta intensidad que combina salto, plancha y flexión, trabajando todo el cuerpo en un solo movimiento.'),
+              ('Mountain climbers', 'Core', 'Fortalece el núcleo y mejora la resistencia llevando las rodillas hacia el pecho en posición de plancha.'),
+              ('Curl de piernas', 'Tren inferior', 'Ejercicio en máquina que fortalece los músculos de la parte posterior de las piernas doblando las rodillas.'),
+              ('Press de pierna', 'Tren inferior', 'Fortalece los muslos empujando una plataforma con los pies desde una posición reclinada.'),
+              ('Pull over', 'Tren superior', 'Ejercicio que expande el pecho y trabaja dorsal ancho al mover una mancuerna desde detrás de la cabeza hasta el pecho.'),
+              ('Facepull', 'Tren superior', 'Trabaja los deltoides posteriores y la estabilidad escapular tirando de una cuerda hacia el rostro.'),
+              ('Fondos en paralelas', 'Tren superior', 'Ejercicio de peso corporal que fortalece tríceps y pecho al descender y elevar el cuerpo entre barras paralelas.'),
+              ('Plancha lateral', 'Core', 'Variante de plancha que trabaja oblicuos y estabilidad manteniendo el cuerpo recto apoyado en un lado.'),
+              ('Press de hombros', 'Tren superior', 'Fortalece los hombros al empujar mancuernas o barra por encima de la cabeza desde posición sentada o de pie.'),
+              ('Sentadilla sumo', 'Tren inferior', 'Variante de sentadilla con postura amplia para trabajar aductores, glúteos y cuádriceps.'),
+              ('Remo invertido', 'Tren superior', 'Ejercicio con peso corporal que trabaja la espalda tirando del torso hacia una barra desde posición supina.'),
+              ('Jalón tras nuca', 'Tren superior', 'Variante de jalón que trabaja el dorsal ancho y trapecios al tirar la barra hacia la nuca.'),
+              ('Push press', 'Tren superior', 'Ejercicio dinámico que combina fuerza y potencia al empujar una barra por encima de la cabeza con ayuda de las piernas.'),
+              ('Russian twists', 'Core', 'Fortalece los oblicuos al rotar el torso de lado a lado en posición sentada, con o sin peso.'),
+              ('Elevación de piernas', 'Core', 'Fortalece el abdomen bajo al levantar las piernas rectas desde posición acostada.'),
+              ('Sentadilla frontal', 'Tren inferior', 'Variante de sentadilla que enfatiza cuádriceps al sostener la barra al frente de los hombros.'),
+              ('Remo pendlay', 'Tren superior', 'Remo con barra que enfatiza la fuerza en la parte alta de la espalda desde una posición paralela al suelo.'),
+              ('Ab Wheel Rollout', 'Core', 'Ejercicio avanzado que fortalece el núcleo al extender el torso usando una rueda con control y estabilidad.');`)
+
+          /*const ejercicios = await db.getAllAsync('SELECT * FROM ejercicios;');
+          console.log('Ejercicios:', ejercicios);*/
+        }
+
+        if (!tablasExistentes.includes('ejercicios_trabajados')) {
+          await db.execAsync(`
+            CREATE TABLE IF NOT EXISTS ejercicios_trabajados (
+              id INTEGER PRIMARY KEY,
+              entrenamiento_id INTEGER NOT NULL,
+              ejercicio_id INTEGER NOT NULL,
+              series INTEGER NOT NULL,
+              repeticiones INTEGER NOT NULL,
+              FOREIGN KEY (entrenamiento_id) REFERENCES entrenamientos (id) ON DELETE CASCADE,
+              FOREIGN KEY (ejercicio_id) REFERENCES ejercicios (id) ON DELETE CASCADE);`);
+
+          // Datos de relleno para tabla ejercicios
+          await db.execAsync(`
+            INSERT INTO ejercicios_trabajados (entrenamiento_id, ejercicio_id, series, repeticiones) VALUES
+              (1, 1, 4, 12), (1, 2, 3, 10), (1, 3, 4, 8), (1, 4, 3, 12), (2, 5, 4, 15), (2, 6, 3, 10), (2, 7, 4, 12),
+              (3, 8, 3, 12), (3, 9, 4, 10), (3, 10, 3, 12), (3, 11, 4, 8), (4, 13, 4, 15), (4, 14, 3, 12), (4, 15, 4, 10), 
+              (4, 16, 4, 12), (4, 17, 3, 8), (5, 18, 3, 10), (5, 19, 4, 15), (5, 20, 4, 12), (5, 21, 3, 10), 
+              (6, 22, 3, 12), (6, 23, 4, 15), (6, 24, 4, 12), (7, 25, 3, 10), (7, 26, 4, 12), (7, 27, 4, 10), (7, 28, 3, 8),
+              (8, 29, 3, 12), (8, 30, 4, 15), (8, 31, 4, 10), (9, 32, 3, 12), (9, 33, 4, 15), (9, 34, 4, 8), (9, 35, 3, 10),
+              (10, 36, 3, 15), (10, 37, 4, 12), (10, 38, 4, 10), (10, 38, 3, 8), (10, 37, 4, 12), (11, 1, 4, 12), (11, 2, 3, 10), 
+              (11, 3, 4, 8), (11, 4, 3, 12), (12, 5, 4, 15), (12, 6, 3, 10), (12, 7, 4, 12), (13, 8, 3, 12), (13, 9, 4, 10), 
+              (13, 10, 3, 12), (13, 11, 4, 8), (14, 13, 4, 15), (14, 14, 3, 12), (14, 15, 4, 10), (14, 16, 4, 12),
+              (14, 17, 3, 8), (15, 18, 3, 10), (15, 19, 4, 15), (15, 20, 4, 12);`);
+
+          /*const ejercicios_trabajados = await db.getAllAsync('SELECT * FROM ejercicios_trabajados;');
+          console.log('Ejercicios_trabajados:', ejercicios_trabajados);*/
         }
       }
-
-      // Mostrar datos de las tablas
-      /*console.log('Mostrando datos de las tablas...');
-
-      const usuarios = await db.getAllAsync('SELECT * FROM usuarios;');
-      const entrenamientos = await db.getAllAsync('SELECT * FROM entrenamientos;');
-      const ejercicios = await db.getAllAsync('SELECT * FROM ejercicios;');
-
-      console.log('Usuarios:', usuarios);
-      console.log('Entrenamientos:', entrenamientos);
-      console.log('Ejercicios:', ejercicios);*/
-
     } catch(err) {
       console.log("Error: ", err)
     }
