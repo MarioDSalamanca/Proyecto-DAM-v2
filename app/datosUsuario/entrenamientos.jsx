@@ -5,18 +5,26 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import consultasDatosUsuario from '../consultas/datosUsuario';
 import { Picker } from '@react-native-picker/picker';
 import Checkbox from 'expo-checkbox';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 export default function Entrenamientos() {
 
+  let fechaActual = new Date().toLocaleDateString();
+
   const [ejercicios, setEjercicios] = useState([]);
-  const [formDatos, setFormDatos] = useState({});
-  const [checkbox, setCheckbox] = useState({});
+  const [formDatos, setFormDatos] = useState({
+    fecha: fechaActual,
+    horas: '',
+    minutos: '',
+    ejerciciosSeleccionados: {}
+  });
+  const [mostrarFecha, setMostrarFecha] = useState(false);
 
   useEffect(() => {
     const getEjercicios = async () => {
       const getEjercicios = await consultasDatosUsuario.selectEjercicios();
       setEjercicios(getEjercicios);
-      console.log("Ejercicios: ", getEjercicios);
     };
 
     getEjercicios();
@@ -27,58 +35,83 @@ export default function Entrenamientos() {
     setEjercicios(getEjercicios);
   }
 
-  // Función para actualizar los datos del usuario
-  const guardar = async () => {
-    if (formDatos.usuario.length < 4) {
-      alert("El usuario como mínimo debe tener 4 caracteres"); 
-      return;
-    }
-    if (formDatos.clave.length < 6) {
-      alert("La clave como mínimo debe tener 6 caracteres");
-      return;
-    }
-    
-    const actualizar = await consultasDatosUsuario.updatePerfil(formDatos);
-    alert(actualizar.mensaje);
-
-    if (actualizar.estado == true) {
-      await AsyncStorage.setItem("usuario", formDatos.usuario);
-    } else {
-      alert("Algo ha salido mal")
-    }
-  }
-
   const actualizarDatos = (name, value) => {
+    if (name == 'fecha') value = value.toLocaleDateString();
     setFormDatos((prev) => ({
       ...prev,
       [name]: value,
     }));      
   };
 
-  // Función para manejar el cambio del checkbox
-  function cambiarEstadoChechbox(id) {
-    setCheckbox(prev => ({
+  function agregarEjercicio(id, campo, valor) {
+    setFormDatos((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      ejerciciosSeleccionados: {
+        ...prev.ejerciciosSeleccionados,
+        [id]: {
+          ...prev.ejerciciosSeleccionados[id],
+          [campo]: valor,
+        },
+      },
     }));
-  };
+  }
+
+  function validarFormulario() {
+    const errores = [];
+    if (Object.entries(formDatos.ejerciciosSeleccionados).length > 0) {
+      Object.entries(formDatos.ejerciciosSeleccionados).forEach(([id, datos]) => {
+        if (datos.seleccionado) {
+          if (!datos.series || !datos.reps) {
+            errores.push(`Faltan datos en el ejercicio "${datos.nombre}"`);
+          }
+        }
+      });
+    } else {
+      errores.push('No has seleccionado ningún ejercicio');
+    }
+
+    if (formDatos.horas == '' && formDatos.minutos == '') {
+      errores.push('Indica la duración de tu entrenamiento');
+    }
+  
+    if (errores.length > 0) {
+      alert(errores.join("\n\n"));
+      return false;
+    }
+    return true;
+  }
+
+  const guardar = async () => {
+    if (validarFormulario()) {
+      const guardarEntrenamiento = await consultasDatosUsuario.insertEjercicios(formDatos);
+      if (guardarEntrenamiento) {
+        alert("Entrenamiento registrado");
+      } else {
+        alert("No se ha podido guardar tu entrenamiento")
+      }
+    }
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.entrenamientosLayout}>
         <View style={styles.entrenamientosLayouts}>
           <Text style={styles.labelEntrenamientos}>Fecha:</Text>
-          <TextInput style={styles.inputsEntrenamientos} placeholder="dd" placeholderTextColor="gray" value={formDatos.usuario ? formDatos.usuario : ''} onChangeText={(value) => actualizarDatos('usuario', value)} keyboardType="numeric" />
-          <Text style={styles.textoEntrenamientos}>/</Text>
-          <TextInput style={styles.inputsEntrenamientos} placeholder="mm" placeholderTextColor="gray" value={formDatos.usuario ? formDatos.usuario : ''} onChangeText={(value) => actualizarDatos('usuario', value)} keyboardType="numeric" />
-          <Text style={styles.textoEntrenamientos}>/</Text>
-          <TextInput style={styles.inputsEntrenamientos} placeholder="aaaa" placeholderTextColor="gray" value={formDatos.usuario ? formDatos.usuario : ''} onChangeText={(value) => actualizarDatos('usuario', value)} keyboardType="numeric" />
+          <Pressable onPress={() => setMostrarFecha(true)}>
+            <Text style={styles.botonFecha}>{ formDatos.fecha }</Text>
+          </Pressable>
+            { mostrarFecha && (
+              <DateTimePicker value={formDatos.fecha} mode={'date'} is24Hour={true}
+              onChange={ (event, value) => { setMostrarFecha(false); if (value) actualizarDatos('fecha', value); }} />
+            )}
         </View>
         <View style={styles.entrenamientosLayouts}>
           <Text style={styles.labelEntrenamientos}>Duración:</Text>
-          <TextInput style={styles.inputsEntrenamientos} placeholder="hh" placeholderTextColor="gray" value={formDatos.usuario ? formDatos.usuario : ''} onChangeText={(value) => actualizarDatos('clave', value)} keyboardType="numeric" />
+          <TextInput style={styles.inputsEntrenamientos} placeholder="hh"
+           placeholderTextColor="gray" onChangeText={(value) => actualizarDatos('horas', value)} keyboardType="numeric" />
           <Text style={styles.textoEntrenamientos}>hora y</Text>
-          <TextInput style={styles.inputsEntrenamientos} placeholder="mm" placeholderTextColor="gray" value={formDatos.usuario ? formDatos.usuario : ''} onChangeText={(value) => actualizarDatos('clave', value)} keyboardType="numeric" />
+          <TextInput style={styles.inputsEntrenamientos} placeholder="mm"
+           placeholderTextColor="gray" onChangeText={(value) => actualizarDatos('minutos', value)} keyboardType="numeric" />
           <Text style={styles.textoEntrenamientos}>min</Text>
         </View>
         <View style={styles.entrenamientosLayouts}>
@@ -93,13 +126,47 @@ export default function Entrenamientos() {
           </View>
         </View>
       </View>
-      <ScrollView style={{ borderWidth: 1, borderColor: "#f8ad2a", }}>
+      <ScrollView style={{ maxHeight: "55%" }}>
         {ejercicios.length > 0 ? (
           ejercicios.map((ejercicio) => (
             <View key={ejercicio.id}>
-              <View style={styles.datosEntrenamientos}>
-                <Checkbox value={checkbox[ejercicio.id] || false} onValueChange={() => cambiarEstadoChechbox(ejercicio.id)} color={checkbox[ejercicio.id] ? '#f8ad2a' : null} />
-                <Text style={styles.textoDatosEntrenamientos}>{ejercicio.nombre}</Text>
+              <View style={styles.ejerciciosEntrenamientos}>
+                <View>
+                <Checkbox 
+                  value={formDatos.ejerciciosSeleccionados[ejercicio.id]?.seleccionado || false} 
+                  onValueChange={(value) => { 
+                    agregarEjercicio(ejercicio.id, "seleccionado", value); 
+                    value ? agregarEjercicio(ejercicio.id, "nombre", ejercicio.nombre) : null} } 
+                  color={formDatos.ejerciciosSeleccionados[ejercicio.id]?.seleccionado ? '#f8ad2a' : undefined}
+                />
+                </View>
+                <View style={styles.datosEjerciciosEntrenamientos}>
+                  <Text style={styles.textoEntrenamientos}>{ejercicio.nombre}</Text>
+                </View>
+                <View style={styles.datosEjerciciosEntrenamientos}>
+                  <TextInput 
+                    style={[
+                      styles.inputsEjerciciosEntrenamientos, 
+                      { backgroundColor: formDatos.ejerciciosSeleccionados[ejercicio.id]?.seleccionado ? "black" : "transparent" }
+                    ]}
+                    onChangeText={(value) => agregarEjercicio(ejercicio.id, "series", value)}
+                    editable={formDatos.ejerciciosSeleccionados[ejercicio.id]?.seleccionado || false}
+                    keyboardType="numeric"
+                  />
+                  <Text style={{ color: "white", fontSize: 15 }}> series</Text>
+                </View>
+                <View style={styles.datosEjerciciosEntrenamientos}>
+                  <TextInput 
+                    style={[
+                      styles.inputsEjerciciosEntrenamientos, 
+                      { backgroundColor: formDatos.ejerciciosSeleccionados[ejercicio.id]?.seleccionado ? "black" : "transparent" }
+                    ]}
+                    onChangeText={(value) => agregarEjercicio(ejercicio.id, "reps", value)}
+                    editable={formDatos.ejerciciosSeleccionados[ejercicio.id]?.seleccionado || false}
+                    keyboardType="numeric"
+                  />
+                  <Text style={{ color: "white", fontSize: 15 }}> reps</Text>
+                </View>
               </View>
             </View>
           ))
@@ -107,7 +174,7 @@ export default function Entrenamientos() {
           <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>No hay ejercicios disponibles</Text>
         )}
       </ScrollView>
-      <Pressable onPress={guardar} style={styles.guardarEntrenamiento} >
+      <Pressable onPress={() => guardar()} style={styles.guardarEntrenamiento} >
         <Text style={styles.textoPerfil}>Registrar entrenamiento</Text>
       </Pressable>
     </View>

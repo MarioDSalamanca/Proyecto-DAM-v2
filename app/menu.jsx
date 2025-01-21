@@ -83,21 +83,6 @@ export default function Menu({ menuVisible, mostrarMenu }) {
                   <MaterialCommunityIcons name="arm-flex-outline" size={18} color={isPressed ? "black" : "white"} /> Entrenamientos
                 </Text>
               </Pressable>
-
-              <Pressable
-                onPress={() => {
-                  setTimeout(() => {
-                    mostrarMenu();
-                    router.replace("/datosUsuario/info");
-                  }, 200);
-                }}
-                onPressIn={handlePressIn}
-                onPressOut={handlePressOut}
-                style={({ pressed }) => [{ backgroundColor: pressed ? "white" : "black" }, styles.cajaLinksMenu]} >
-                <Text style={[ styles.linkMenu, { color: isPressed ? "black" : "white" }]} >
-                  <MaterialCommunityIcons name="information-outline" size={18} color={isPressed ? "black" : "white"} /> Info
-                </Text>
-              </Pressable>
             </View>
           </View>
         </View>

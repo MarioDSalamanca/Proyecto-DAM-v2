@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     perfilLayout: {
       flexDirection: "row",
       flexWrap: "wrap",
+      alignItems: "center",
       justifyContent: "space-around",
       padding: "2%",      
     },
@@ -252,6 +253,7 @@ const styles = StyleSheet.create({
     textoDatosEjercicios:{
       fontSize: 15,
       textAlign: "center",
+      color: "white",
     },
 
   // Entrenamientos
@@ -268,6 +270,14 @@ const styles = StyleSheet.create({
       marginVertical: "1%",
       width: "90%",
       marginLeft: "5%",
+    },
+    botonFecha: {
+      backgroundColor: "black",
+      borderRadius: 5,
+      color: "white",
+      fontSize: 15,
+      padding: "3%",
+      textAlign: "center",
     },
     labelEntrenamientos: {
       fontSize: 15,
@@ -291,11 +301,32 @@ const styles = StyleSheet.create({
     filtroEntrenamientos: {
       color: "white",
     },
+    ejerciciosEntrenamientos: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginHorizontal: "3%",
+      marginVertical: "1%",
+    },
+    datosEjerciciosEntrenamientos: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "28%",
+    },
+    inputsEjerciciosEntrenamientos: {
+      backgroundColor: "black",
+      borderRadius: 5,
+      color: "white",
+      fontSize: 15,
+      width: "50%",
+      textAlign: "center",
+    },
     guardarEntrenamiento: {
       width: "90%",
       backgroundColor: "white",
       margin: "auto",
-      marginTop: "5%",
+      marginTop: "10%",
       padding: "1.2%",
       textAlign: "center",
       borderRadius: 5,

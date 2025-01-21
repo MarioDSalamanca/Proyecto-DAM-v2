@@ -109,6 +109,9 @@ const consultasDatosUsuario = {
       }
 
       return ejercicios;
+    },
+    insertEjercicios: async (formDatos) => {
+      console.log(formDatos)
     }
 };
 

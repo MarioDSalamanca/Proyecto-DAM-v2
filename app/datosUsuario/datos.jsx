@@ -88,7 +88,7 @@ export default function Datos() {
               </Pressable>
             </View>
             {expandido === entrenamiento.id && (
-              <View style={{ backgroundColor: "white", marginHorizontal: "2%", borderTopWidth: 2, borderColor: "#f8ad2a", }}>
+              <View style={{ backgroundColor: "black", marginHorizontal: "2%", borderTopWidth: 1, borderColor: "#f8ad2a", }}>
                 {respuesta.ejercicios.filter((ejercicio) => ejercicio.entrenamiento_id === entrenamiento.id).map((ejercicio) => (
                   <View key={ejercicio.id} style={styles.datosEjercicios}>
                     <View style={styles.celdaEjercicios}>
