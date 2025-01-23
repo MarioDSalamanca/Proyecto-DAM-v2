@@ -6,15 +6,14 @@ import consultasDatosUsuario from '../consultas/datosUsuario';
 import { Picker } from '@react-native-picker/picker';
 import Checkbox from 'expo-checkbox';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { router } from "expo-router";
 
 
 export default function Entrenamientos() {
 
-  let fechaActual = new Date().toLocaleDateString();
-
   const [ejercicios, setEjercicios] = useState([]);
   const [formDatos, setFormDatos] = useState({
-    fecha: fechaActual,
+    fecha: new Date(),
     horas: '',
     minutos: '',
     ejerciciosSeleccionados: {}
@@ -22,13 +21,22 @@ export default function Entrenamientos() {
   const [mostrarFecha, setMostrarFecha] = useState(false);
 
   useEffect(() => {
-    const getEjercicios = async () => {
-      const getEjercicios = await consultasDatosUsuario.selectEjercicios();
-      setEjercicios(getEjercicios);
-    };
-
     getEjercicios();
+    getUsuario();
   }, []);
+
+  const getEjercicios = async () => {
+    const getEjercicios = await consultasDatosUsuario.selectEjercicios();
+    setEjercicios(getEjercicios);
+  };
+
+  const getUsuario = async () => {
+    const getUsuario = await AsyncStorage.getItem("usuario");
+    setFormDatos((prev) => ({
+      ...prev,
+      usuario: getUsuario,
+    }));
+  };
 
   const filtrarEjercicios = async (grupo_muscular) => {
     const getEjercicios = await consultasDatosUsuario.selectEjerciciosFiltrados(grupo_muscular);
@@ -36,7 +44,6 @@ export default function Entrenamientos() {
   }
 
   const actualizarDatos = (name, value) => {
-    if (name == 'fecha') value = value.toLocaleDateString();
     setFormDatos((prev) => ({
       ...prev,
       [name]: value,
@@ -83,12 +90,16 @@ export default function Entrenamientos() {
 
   const guardar = async () => {
     if (validarFormulario()) {
-      const guardarEntrenamiento = await consultasDatosUsuario.insertEjercicios(formDatos);
-      if (guardarEntrenamiento) {
-        alert("Entrenamiento registrado");
-      } else {
-        alert("No se ha podido guardar tu entrenamiento")
-      }
+      setFormDatos((prev) => ({
+        ...prev,
+        fechaFormateada: formDatos.fecha.toLocaleDateString(),
+      }));
+
+      const guardarEntrenamiento = await consultasDatosUsuario.insertEntrenamiento(formDatos);
+
+      alert(guardarEntrenamiento.mensaje)
+      router.replace("/datosUsuario/entrenamientos");
+
     }
   }
 
@@ -98,7 +109,7 @@ export default function Entrenamientos() {
         <View style={styles.entrenamientosLayouts}>
           <Text style={styles.labelEntrenamientos}>Fecha:</Text>
           <Pressable onPress={() => setMostrarFecha(true)}>
-            <Text style={styles.botonFecha}>{ formDatos.fecha }</Text>
+            <Text style={styles.botonFecha}>{ formDatos.fecha.toLocaleDateString() }</Text>
           </Pressable>
             { mostrarFecha && (
               <DateTimePicker value={formDatos.fecha} mode={'date'} is24Hour={true}
@@ -171,7 +182,7 @@ export default function Entrenamientos() {
             </View>
           ))
         ) : (
-          <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>No hay ejercicios disponibles</Text>
+          <Text style={{ textAlign: "center", color: "white", fontSize: 18, marginTop: "3%" }}>No hay ejercicios disponibles</Text>
         )}
       </ScrollView>
       <Pressable onPress={() => guardar()} style={styles.guardarEntrenamiento} >

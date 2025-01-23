@@ -238,6 +238,8 @@ const styles = StyleSheet.create({
     textoDatosEntrenamientos: {
       color: "white",
       fontSize: 15,
+      width: "27%",
+      textAlign: "center",
     },
     datosEjercicios:{
       flexDirection: "row",
@@ -334,11 +336,39 @@ const styles = StyleSheet.create({
       borderColor: "#f8ad2a",
     },
 
+  // Ejercicios
+  
+    bloqueEjercicio: {
+      margin: "2%",
+      marginHorizontal: "4%",
+      padding: "5%",
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: "#f8ad2a",
+    },
+    nombreEjercicio: {
+      color: "white",
+      fontWeight: "700",
+      fontSize: 18,
+    },
+    grupoMuscularEjercicio: {
+      color: "white",
+      fontWeight: "600",
+      fontSize: 15,
+      marginVertical: "3%",
+    },
+    descripcionEjercicio: {
+      color: "white",
+      fontSize: 15,
+      textAlign: "justify",
+    },
+
+
     piker: {
       marginVertical: "5%",
       borderBottomWidth: 1,
       borderColor: "white",
-    }
+    },
 });
 
 export { styles };

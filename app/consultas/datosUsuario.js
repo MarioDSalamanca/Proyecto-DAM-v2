@@ -93,7 +93,7 @@ const consultasDatosUsuario = {
     selectEjercicios: async () => {
       const db = await SQLite.openDatabaseAsync('VitalPower');
 
-      const ejercicios = await db.getAllAsync(`SELECT * FROM ejercicios`);
+      const ejercicios = await db.getAllAsync(`SELECT * FROM ejercicios ORDER BY grupo_muscular`);
 
       return ejercicios;
     },
@@ -103,15 +103,62 @@ const consultasDatosUsuario = {
       let ejercicios;
 
       if (grupo_muscular == 'Todos') {
-        ejercicios = await db.getAllAsync(`SELECT * FROM ejercicios`);
+        ejercicios = await db.getAllAsync(`SELECT * FROM ejercicios ORDER BY grupo_muscular`);
       } else {
         ejercicios = await db.getAllAsync(`SELECT * FROM ejercicios WHERE grupo_muscular = '${grupo_muscular}'`);
       }
 
       return ejercicios;
     },
-    insertEjercicios: async (formDatos) => {
-      console.log(formDatos)
+    insertEntrenamiento: async (formDatos) => {
+      const db = await SQLite.openDatabaseAsync('VitalPower');
+
+      const idUsuario = (await db.getFirstAsync(`SELECT id FROM usuarios WHERE usuario = '${formDatos.usuario}'`)).id;
+
+      const fecha = formDatos.fechaFormateada;
+      
+      let duracion;
+      if (formDatos.horas != '' && formDatos.minutos != '') {
+        duracion = `${formDatos.horas} horas y ${formDatos.minutos} minutos`;
+      } else if (formDatos.horas != '' && formDatos.minutos == '') {
+        duracion = formDatos.horas == '1' ? `${formDatos.horas} hora` : `${formDatos.horas} horas`;
+      } else if (formDatos.horas == '' && formDatos.minutos != '') {
+        duracion = `${formDatos.minutos} minutos`;
+      }
+
+      let num_ejercicios = Object.entries(formDatos.ejerciciosSeleccionados)
+        .filter(([id, datos]) => datos.seleccionado);
+
+      num_ejercicios = num_ejercicios.length;
+
+      await db.runAsync(`
+        INSERT INTO entrenamientos (usuario_id, duracion, num_ejercicios, fecha) VALUES (?, ?, ?, ?)`,
+         idUsuario, duracion, num_ejercicios, fecha);
+         
+      const idEntrenamiento = (await db.getFirstAsync(`SELECT last_insert_rowid() AS id`)).id;
+
+      let registrosAInsertar = 0;
+      const insertarEjerciciosTrabajados = Object.entries(formDatos.ejerciciosSeleccionados).map(([id, datos]) => {
+        if (datos.seleccionado) {
+          registrosAInsertar = registrosAInsertar + 1;
+          return db.runAsync(`
+            INSERT INTO ejercicios_trabajados (entrenamiento_id, ejercicio_id, series, repeticiones) VALUES (?, ?, ?, ?)`,
+            idEntrenamiento, id, datos.series, datos.reps
+          );
+        }
+      });
+      
+      await Promise.all(insertarEjerciciosTrabajados);
+
+      const registrosInsertados = await db.getFirstAsync(`
+        SELECT COUNT(*) as count FROM ejercicios_trabajados WHERE entrenamiento_id = ?`, idEntrenamiento);
+
+      if (registrosAInsertar == registrosInsertados.count) {
+        return { estado: true, mensaje: `Entrenamiento registrado` }
+      } else {
+        return { estado: true, mensaje: `No se ha podido guardar tu entrenamiento` }
+      }
+      
     }
 };
 

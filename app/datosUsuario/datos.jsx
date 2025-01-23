@@ -110,7 +110,7 @@ export default function Datos() {
           </View>
           ))
         ) : (
-          <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}> Todavía no has realizado entrenamientos </Text>
+          <Text style={{ textAlign: "center", color: "white", fontSize: 18, marginTop: "3%" }}> Todavía no has realizado entrenamientos </Text>
         )}
       </ScrollView>
     </View>

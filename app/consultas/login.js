@@ -37,7 +37,7 @@ const consultasIndex = {
               altura REAL,
               genero TEXT);`);
 
-          await db.execAsync(`
+          await db.runAsync(`
             INSERT INTO usuarios (usuario, clave, edad, peso, altura, genero) VALUES
               ('Mario', 'Mario123', 23, 66, 1.73, 'Masculino');`);
           
@@ -57,23 +57,23 @@ const consultasIndex = {
               FOREIGN KEY (usuario_id) REFERENCES usuarios (id) ON DELETE CASCADE);`);
 
           // Datos de relleno para tabla entrenamientos
-          await db.execAsync(`
+          await db.runAsync(`
             INSERT INTO entrenamientos (usuario_id, duracion, num_ejercicios, fecha) VALUES
-              (1, '45 minutos', 4, '2025-01-01'),
-              (1, '30 minutos', 3, '2025-01-03'),
-              (1, '50 minutos', 5, '2025-01-05'),
-              (1, '60 minutos', 5, '2025-01-07'),
-              (1, '40 minutos', 4, '2025-01-09'),
-              (1, '35 minutos', 3, '2025-01-11'),
-              (1, '55 minutos', 4, '2025-01-13'),
-              (1, '45 minutos', 3, '2025-01-15'),
-              (1, '30 minutos', 4, '2025-01-17'),
-              (1, '50 minutos', 5, '2025-01-18'),
-              (1, '60 minutos', 5, '2025-01-19'),
-              (1, '40 minutos', 4, '2025-01-20'),
-              (1, '35 minutos', 3, '2025-01-21'),
-              (1, '45 minutos', 4, '2025-01-22'),
-              (1, '50 minutos', 5, '2025-01-23');`);
+              (1, '1 hora y 45 minutos', 4, '1/1/2025'),
+              (1, '30 minutos', 3, '3/1/2025'),
+              (1, '50 minutos', 5, '5/1/2025'),
+              (1, '1 hora', 5, '7/1/2025'),
+              (1, '40 minutos', 4, '9/1/2025'),
+              (1, '1 hora y35 minutos', 3, '11/1/2025'),
+              (1, '55 minutos', 4, '13/1/2025'),
+              (1, '45 minutos', 3, '15/1/2025'),
+              (1, '30 minutos', 4, '17/1/2025'),
+              (1, '50 minutos', 5, '18/1/2025'),
+              (1, '60 minutos', 5, '19/1/2025'),
+              (1, '40 minutos', 4, '20/1/2025'),
+              (1, '35 minutos', 3, '21/1/2025'),
+              (1, '45 minutos', 4, '22/1/2025'),
+              (1, '50 minutos', 5, '23/1/2025');`);
               
           /*const entrenamientos = await db.getAllAsync('SELECT * FROM entrenamientos;');
           console.log('Entrenamientos:', entrenamientos);*/
@@ -89,7 +89,7 @@ const consultasIndex = {
               descripcion TEXT NOT NULL);`);
 
           // Datos de relleno para tabla ejercicios
-          await db.execAsync(`
+          await db.runAsync(`
             INSERT INTO ejercicios (nombre, grupo_muscular, descripcion) VALUES
               ('Press de banca', 'Tren superior', 'El press de banca trabaja los músculos del pecho, tríceps y hombros. Se realiza acostado mientras se empuja una barra hacia arriba.'),
               ('Sentadilla', 'Tren inferior', 'Ejercicio fundamental que fortalece muslos, glúteos y caderas. Involucra descender doblando las rodillas con el peso en los talones.'),
@@ -111,7 +111,7 @@ const consultasIndex = {
               ('Elevaciones de talones', 'Tren inferior', 'Fortalece los músculos de la pantorrilla levantando los talones desde el suelo con control.'),
               ('Press Arnold', 'Tren superior', 'Variante del press de hombros que combina un giro para trabajar los deltoides de manera completa.'),
               ('Jalón al pecho', 'Tren superior', 'Se realiza con polea para trabajar la espalda alta y bíceps jalando la barra hacia el pecho.'),
-              ('Burpees', 'Cardio', 'Ejercicio de alta intensidad que combina salto, plancha y flexión, trabajando todo el cuerpo en un solo movimiento.'),
+              ('Burpees', 'Core', 'Ejercicio de alta intensidad que combina salto, plancha y flexión, trabajando todo el cuerpo en un solo movimiento.'),
               ('Mountain climbers', 'Core', 'Fortalece el núcleo y mejora la resistencia llevando las rodillas hacia el pecho en posición de plancha.'),
               ('Curl de piernas', 'Tren inferior', 'Ejercicio en máquina que fortalece los músculos de la parte posterior de las piernas doblando las rodillas.'),
               ('Press de pierna', 'Tren inferior', 'Fortalece los muslos empujando una plataforma con los pies desde una posición reclinada.'),
@@ -146,7 +146,7 @@ const consultasIndex = {
               FOREIGN KEY (ejercicio_id) REFERENCES ejercicios (id) ON DELETE CASCADE);`);
 
           // Datos de relleno para tabla ejercicios
-          await db.execAsync(`
+          await db.runAsync(`
             INSERT INTO ejercicios_trabajados (entrenamiento_id, ejercicio_id, series, repeticiones) VALUES
               (1, 1, 4, 12), (1, 2, 3, 10), (1, 3, 4, 8), (1, 4, 3, 12), (2, 5, 4, 15), (2, 6, 3, 10), (2, 7, 4, 12),
               (3, 8, 3, 12), (3, 9, 4, 10), (3, 10, 3, 12), (3, 11, 4, 8), (4, 13, 4, 15), (4, 14, 3, 12), (4, 15, 4, 10), 
