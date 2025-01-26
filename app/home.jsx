@@ -11,12 +11,12 @@ export default function Home() {
               Ejercicios
             </Text>
         </Pressable>
-        <Pressable style={styles.homeLayouts} onPress={() =>  alert("nutricion")}>
+        <Pressable style={styles.homeLayouts} onPress={() =>  router.replace("/blog/nutricion")}>
             <Text style={styles.textoHome}>
               Nutrición
             </Text>
         </Pressable>
-        <Pressable style={styles.homeLayouts} onPress={() =>  alert("salud")}>
+        <Pressable style={styles.homeLayouts} onPress={() =>  router.replace("/blog/salud")}>
             <Text style={styles.textoHome}>
               Salud
             </Text>

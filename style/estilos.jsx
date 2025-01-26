@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     },
     textoHome: {
       fontWeight: "500",
-      fontSize: 16,
+      fontSize: 18,
       color: 'white',
       textShadowColor: 'black',
       textShadowOffset: { width: 2, height: 2 },
@@ -339,17 +339,16 @@ const styles = StyleSheet.create({
   // Ejercicios
   
     bloqueEjercicio: {
-      margin: "2%",
-      marginHorizontal: "4%",
-      padding: "5%",
+      marginVertical: "2%",
+      padding: "4%",
       borderRadius: 5,
       borderWidth: 1,
       borderColor: "#f8ad2a",
     },
     nombreEjercicio: {
-      color: "white",
+      color: "#f8ad2a",
       fontWeight: "700",
-      fontSize: 18,
+      fontSize: 15,
     },
     grupoMuscularEjercicio: {
       color: "white",
@@ -363,12 +362,115 @@ const styles = StyleSheet.create({
       textAlign: "justify",
     },
 
+  // Nutrición
+    verMas: {
+      backgroundColor: "white",
+      paddingHorizontal: "2%",
+      width: "30%",
+      borderWidth: 1,
+      borderColor: "#f8ad2a",
+      borderRadius: 2,
+    },
+    modal: {
+      width: "80%",
+      maxHeight: "70%",
+      backgroundColor: "#303030",
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: "#f8ad2a",
+      paddingVertical: "6%",
+      paddingHorizontal: "6%",
+      flexDirection: "column",
+    },
+    cabeceraModal: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: "5%",
+    },
+    cerrarModal: {
+      width: "auto",
+      borderRadius: 3,
+      margin: "auto",
+      marginTop: "8%",
+    },
+    textoCerrarModal: {
+      borderRadius: 3,
+      color: "black",
+      backgroundColor: "white",
+      fontSize: 15,
+      fontWeight: "700",
+      padding: "1%",
+      paddingHorizontal: "5%",
+    },
+
+  // Salud
+
+    tituloSalud: {
+      color: "white",
+      margin: "4%",
+      marginTop: "6%",
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: "800",
+    },
+    saludLayout: {
+      margin: "5%",
+      flexDirection: "column",
+      justifyContent: "center",
+    },
+    saludLayouts: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingVertical: "2%",
+      width: "90%",
+      marginLeft: "5%",
+      borderBottomWidth: 1,
+      borderColor: "white",      
+    },
+    textoSalud: {
+      color: "#f8ad2a",
+      fontSize: 17,
+      padding: "2%",
+    },
+    contenedoresColesterol: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      padding: "2%",
+      width: "100%",
+    },
+    inputsColesterol: {
+      width: "25%",
+      marginLeft: "4%",
+      padding: "1%",
+      paddingLeft: "2%",
+      borderRadius: 3,
+    },
 
     piker: {
       marginVertical: "5%",
       borderBottomWidth: 1,
       borderColor: "white",
     },
+    titulosBlog: {
+      color: "white",
+      marginHorizontal: "8%",
+      marginTop: "4%",
+      textAlign: "center",
+      fontSize: 18,
+      fontWeight: "700",
+      fontStyle: "italic",
+      letterSpacing: 2,
+      textShadowColor: 'black',
+      textShadowOffset: { width: 2, height: 2 },
+      textShadowRadius: 1,     
+    },
+    imagenes: {
+      width: "100%",
+      marginBottom: "5%",
+    }
 });
 
 export { styles };

@@ -23,7 +23,8 @@
     "react-native-safe-area": "^0.5.1",
     "@react-native-picker/picker": "2.9.0",
     "expo-checkbox": "~4.0.1",
-    "@react-native-community/datetimepicker": "8.2.0"
+    "@react-native-community/datetimepicker": "8.2.0",
+    "expo-image": "~2.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

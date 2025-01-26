@@ -98,7 +98,7 @@ const consultasIndex = {
               ('Flexiones', 'Tren superior', 'Las flexiones desarrollan fuerza en el pecho, hombros y tríceps empujando el cuerpo hacia arriba desde el suelo.'),
               ('Zancadas', 'Tren inferior', 'Movimiento unilateral que mejora equilibrio y fuerza en piernas al avanzar y bajar con control.'),
               ('Press militar', 'Tren superior', 'Ejercicio que desarrolla fuerza en los deltoides al empujar una barra o mancuernas sobre la cabeza.'),
-              ('Planchas', 'Core', 'Ejercicio isométrico que fortalece el núcleo, manteniendo una posición estable y recta desde los hombros hasta los pies.'),
+              ('Planchas', 'Core', 'Ejercicio isométrico que fortalece el abdomen, manteniendo una posición estable y recta desde los hombros hasta los pies.'),
               ('Curl de bíceps', 'Tren superior', 'El curl de bíceps se realiza doblando los codos con mancuernas o barra para desarrollar los músculos de los brazos.'),
               ('Remo con barra', 'Tren superior', 'Fortalece la espalda alta y media al inclinar el torso y tirar de una barra hacia el abdomen.'),
               ('Press inclinado', 'Tren superior', 'Variante del press de banca que se realiza en un banco inclinado para trabajar el pecho superior.'),
@@ -112,7 +112,7 @@ const consultasIndex = {
               ('Press Arnold', 'Tren superior', 'Variante del press de hombros que combina un giro para trabajar los deltoides de manera completa.'),
               ('Jalón al pecho', 'Tren superior', 'Se realiza con polea para trabajar la espalda alta y bíceps jalando la barra hacia el pecho.'),
               ('Burpees', 'Core', 'Ejercicio de alta intensidad que combina salto, plancha y flexión, trabajando todo el cuerpo en un solo movimiento.'),
-              ('Mountain climbers', 'Core', 'Fortalece el núcleo y mejora la resistencia llevando las rodillas hacia el pecho en posición de plancha.'),
+              ('Mountain climbers', 'Core', 'Fortalece el abdomen y mejora la resistencia llevando las rodillas hacia el pecho en posición de plancha.'),
               ('Curl de piernas', 'Tren inferior', 'Ejercicio en máquina que fortalece los músculos de la parte posterior de las piernas doblando las rodillas.'),
               ('Press de pierna', 'Tren inferior', 'Fortalece los muslos empujando una plataforma con los pies desde una posición reclinada.'),
               ('Pull over', 'Tren superior', 'Ejercicio que expande el pecho y trabaja dorsal ancho al mover una mancuerna desde detrás de la cabeza hasta el pecho.'),
@@ -128,7 +128,7 @@ const consultasIndex = {
               ('Elevación de piernas', 'Core', 'Fortalece el abdomen bajo al levantar las piernas rectas desde posición acostada.'),
               ('Sentadilla frontal', 'Tren inferior', 'Variante de sentadilla que enfatiza cuádriceps al sostener la barra al frente de los hombros.'),
               ('Remo pendlay', 'Tren superior', 'Remo con barra que enfatiza la fuerza en la parte alta de la espalda desde una posición paralela al suelo.'),
-              ('Ab Wheel Rollout', 'Core', 'Ejercicio avanzado que fortalece el núcleo al extender el torso usando una rueda con control y estabilidad.');`)
+              ('Ab Wheel Rollout', 'Core', 'Ejercicio avanzado que fortalece el abdomen al extender el torso usando una rueda con control y estabilidad.');`)
 
           /*const ejercicios = await db.getAllAsync('SELECT * FROM ejercicios;');
           console.log('Ejercicios:', ejercicios);*/

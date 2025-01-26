@@ -18,7 +18,10 @@ export default function Ejercicios() {
 
   return (
     <View style={styles.container}>
-    <ScrollView>
+    <View>
+      <Text style={styles.titulosBlog}>Conoce todos los ejercicios con los que te puedes poner en forma</Text>
+    </View>
+    <ScrollView style={{ margin: "6%" }}>
       {ejercicios.length > 0 && (
         ejercicios.map((ejercicio) => (
           <View key={ejercicio.id}>
